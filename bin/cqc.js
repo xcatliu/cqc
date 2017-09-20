@@ -53,7 +53,7 @@ if (!options.verbose) {
 
 stdout = `
 Number of files:            ${cqcResult.numberOfFiles}
-Souce lines of code:        ${cqcResult.sloc.source}
+Source lines of code:       ${cqcResult.sloc.source}
 Duplicate rate:             ${cqcResult.jscpd.percentage}%
 Max complexity:             ${cqcResult.complexity.max}
 Complexity > 5  (count):    ${cqcResult.complexity.gt5Count}
