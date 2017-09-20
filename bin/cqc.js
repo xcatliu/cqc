@@ -58,7 +58,8 @@ Duplicate rate:             ${cqcResult.jscpd.percentage}%
 Max complexity:             ${cqcResult.complexity.max}
 Complexity > 5  (count):    ${cqcResult.complexity.gt5Count}
 Complexity > 10 (count):    ${cqcResult.complexity.gt10Count}
-Complexity > 20 (count):    ${cqcResult.complexity.gt20Count}`;
+Complexity > 20 (count):    ${cqcResult.complexity.gt20Count}
+`;
 
 } else {
 
@@ -111,7 +112,8 @@ ${cqcResult.complexity.details.map((detail) => {
         ${detail.details.map(({ line, endLine, complexity }) => {
             return `${line}-${endLine}: complexity: ${complexity}`;
         }).join('\r\n        ')}`;
-}).join('\r\n')}`;
+}).join('\r\n')}
+`;
 
 }
 /* eslint-enable indent */
