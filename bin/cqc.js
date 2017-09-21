@@ -16,6 +16,7 @@ program
     .option('--ignore-pattern <pattern>', 'Pattern of files to ignore')
     .option('-f, --format <string>', 'Specify an output format, e.g. json')
     .option('-v, --verbose', 'Verbose mode. A lot more information output.')
+    .option('--complexity-threshold <number>', 'Set the complexity threshold, default to 10')
     .parse(process.argv);
 
 const files = program.args;
@@ -33,10 +34,17 @@ if (program.ignorePattern) {
     ignorePattern = ignorePattern.concat(currentIgnorePattern);
 }
 
-const options = {
-    verbose: program.verbose,
-    ignore: ignorePattern
-};
+const options = {};
+
+if (ignorePattern.length > 0) {
+    options.ignore = ignorePattern;
+}
+if (typeof program.verbose === 'boolean') {
+    options.verbose = program.verbose;
+}
+if (typeof program.complexityThreshold === 'string') {
+    options.complexityThreshold = program.complexityThreshold;
+}
 
 const cqcResult = codeQualityChecker.check(files, options);
 
@@ -52,13 +60,11 @@ let stdout;
 if (!options.verbose) {
 
 stdout = `
-Number of files:            ${cqcResult.numberOfFiles}
-Source lines of code:       ${cqcResult.sloc.source}
-Duplicate rate:             ${cqcResult.jscpd.percentage}%
-Max complexity:             ${cqcResult.complexity.max}
-Complexity > 5  (count):    ${cqcResult.complexity.gt5Count}
-Complexity > 10 (count):    ${cqcResult.complexity.gt10Count}
-Complexity > 20 (count):    ${cqcResult.complexity.gt20Count}
+Number of files:        ${cqcResult.numberOfFiles}
+Source lines of code:   ${cqcResult.sloc.source}
+Duplicate rate:         ${cqcResult.jscpd.percentage}%
+High complexity rate:   ${cqcResult.complexity.percentage}%
+Max complexity:         ${cqcResult.complexity.max}
 `;
 
 } else {
@@ -74,18 +80,22 @@ ${cqcResult.fileList.map((filepath) => `    - ${filepath}`).join('\r\n')}
 stdout += `
 Physical lines:             ${cqcResult.sloc.total}
 Source lines of code:       ${cqcResult.sloc.source}
-Lines with comments:        ${cqcResult.sloc.comment}
-Lines with single-line comments:    ${cqcResult.sloc.single}
-Lines with block comments:          ${cqcResult.sloc.block}
-Lines mixed up with source and comments:    ${cqcResult.sloc.mixed}
+Comments:                   ${cqcResult.sloc.comment}
+Single-line comments:       ${cqcResult.sloc.single}
+Block comments:             ${cqcResult.sloc.block}
+Mixed source and comments:  ${cqcResult.sloc.mixed}
 Empty lines:                ${cqcResult.sloc.empty}
-Lines with TODO's:          ${cqcResult.sloc.todo}
+TODO's:                     ${cqcResult.sloc.todo}
 `;
 
 // Duplicate code
 stdout += `
 Duplicate rate:             ${cqcResult.jscpd.percentage}%
-Files of duplicated code:   ${cqcResult.jscpd.report.statistics.files}
+`;
+
+    if (cqcResult.jscpd.percentage !== '0.00') {
+
+stdout += `Files of duplicated code:   ${cqcResult.jscpd.report.statistics.files}
 Count of duplicated code:   ${cqcResult.jscpd.report.statistics.clones}
 Lines of duplicated code:   ${cqcResult.jscpd.report.statistics.duplications}
 Duplication details:
@@ -95,18 +105,25 @@ ${cqcResult.jscpd.report.duplicates.map((clone) => {
 }).join('\r\n')}
 `;
 
+    }
+
 // Complexity
 stdout += `
+High complexity rate:       ${cqcResult.complexity.percentage}%
+High complexity count:      ${cqcResult.complexity.count}
 Max complexity:             ${cqcResult.complexity.max}
-Complexity > 5  (count):    ${cqcResult.complexity.gt5Count}
-Complexity > 10 (count):    ${cqcResult.complexity.gt10Count}
-Complexity > 20 (count):    ${cqcResult.complexity.gt20Count}
-Complexity details:
+`;
+
+    if (cqcResult.complexity.percentage !== '0.00') {
+
+stdout += `Complexity details:
 ${cqcResult.complexity.details.map((detail) => {
     return `    - ${detail.filepath}:
 ${detail.details.map(({ line, endLine, complexity }) => `        ${line}-${endLine}: complexity: ${complexity}`).join('\r\n')}`;
 }).join('\r\n')}
 `;
+
+    }
 
 }
 /* eslint-enable indent */

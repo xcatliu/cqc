@@ -3,10 +3,8 @@
 - Number of files
 - Source lines of code
 - Duplicate rate
+- High complexity rate
 - Max complexity
-- Complexity > 5  (count)
-- Complexity > 10 (count)
-- Complexity > 20 (count)
 
 ## Supported Languages
 
@@ -37,13 +35,11 @@ cqc "src/**/*.js"
 Output:
 
 ```
-Number of files:            8
-Source lines of code:       357
-Duplicate rate:             5.62%
-Max complexity:             15
-Complexity > 5  (count):    3
-Complexity > 10 (count):    1
-Complexity > 20 (count):    0
+Number of files:        9
+Source lines of code:   463
+Duplicate rate:         15.71%
+High complexity rate:   11.11%
+Max complexity:         19
 ```
 
 #### Multiple patterns
@@ -82,18 +78,16 @@ Output:
 
 ```json
 {
-    "numberOfFiles": 8,
+    "numberOfFiles": 9,
     "sloc": {
-        "source": 357
+        "source": 463
     },
     "jscpd": {
-        "percentage": "5.62"
+        "percentage": "15.71"
     },
     "complexity": {
-        "max": 15,
-        "gt5Count": 3,
-        "gt10Count": 1,
-        "gt20Count": 0
+        "percentage": "11.11",
+        "max": 19
     }
 }
 ```
@@ -107,51 +101,50 @@ cqc "src/**/*.js" --verbose
 Output:
 
 ```
-Number of files: 10
+Number of files: 9
 File list:
-    - /Users/xcatliu/Workspace/github/xcatliu/cqc/src/BaseChecker/index.js
-    - /Users/xcatliu/Workspace/github/xcatliu/cqc/src/CodeQualityChecker/index.js
-    - /Users/xcatliu/Workspace/github/xcatliu/cqc/src/ComplexityChecker/eslintConfig.js
-    - /Users/xcatliu/Workspace/github/xcatliu/cqc/src/ComplexityChecker/index.js
-    - /Users/xcatliu/Workspace/github/xcatliu/cqc/src/JscpdChecker/getLanguageFromFilepath.js
-    - /Users/xcatliu/Workspace/github/xcatliu/cqc/src/JscpdChecker/index.js
-    - /Users/xcatliu/Workspace/github/xcatliu/cqc/src/JscpdChecker/reporter.js
-    - /Users/xcatliu/Workspace/github/xcatliu/cqc/src/SlocChecker/index.1.js
-    - /Users/xcatliu/Workspace/github/xcatliu/cqc/src/SlocChecker/index.2.js
-    - /Users/xcatliu/Workspace/github/xcatliu/cqc/src/SlocChecker/index.js
+    - E:\github\xcatliu\cqc\src\BaseChecker\index.js
+    - E:\github\xcatliu\cqc\src\CodeQualityChecker\index.js
+    - E:\github\xcatliu\cqc\src\ComplexityChecker\eslintConfig.js
+    - E:\github\xcatliu\cqc\src\ComplexityChecker\index.js
+    - E:\github\xcatliu\cqc\src\JscpdChecker\getLanguageFromFilepath.js
+    - E:\github\xcatliu\cqc\src\JscpdChecker\index.js
+    - E:\github\xcatliu\cqc\src\JscpdChecker\reporter.js
+    - E:\github\xcatliu\cqc\src\SlocChecker\index.js
+    - E:\github\xcatliu\cqc\src\test.js
 
-Physical lines:             682
-Source lines of code:       573
-Lines with comments:        24
-Lines with single-line comments:    24
-Lines with block comments:          0
-Lines mixed up with source and comments:    0
-Empty lines:                85
-Lines with TODO's:          0
+Physical lines:             552
+Source lines of code:       463
+Comments:                   23
+Single-line comments:       23
+Block comments:             0
+Mixed source and comments:  0
+Empty lines:                66
+TODO's:                     0
 
-Duplicate rate:             31.21%
-Files of duplicated code:   3
-Count of duplicated code:   4
-Lines of duplicated code:   216
+Duplicate rate:             15.71%
+Files of duplicated code:   1
+Count of duplicated code:   2
+Lines of duplicated code:   88
 Duplication details:
-    - /Users/xcatliu/Workspace/github/xcatliu/cqc/src/SlocChecker/index.1.js: 10-39
-      /Users/xcatliu/Workspace/github/xcatliu/cqc/src/SlocChecker/index.1.js: 13-42
-    - /Users/xcatliu/Workspace/github/xcatliu/cqc/src/SlocChecker/index.1.js: 9-33
-      /Users/xcatliu/Workspace/github/xcatliu/cqc/src/SlocChecker/index.1.js: 87-111
-    - /Users/xcatliu/Workspace/github/xcatliu/cqc/src/SlocChecker/index.1.js: 1-116
-      /Users/xcatliu/Workspace/github/xcatliu/cqc/src/SlocChecker/index.2.js: 1-116
-    - /Users/xcatliu/Workspace/github/xcatliu/cqc/src/SlocChecker/index.1.js: 43-87
-      /Users/xcatliu/Workspace/github/xcatliu/cqc/src/SlocChecker/index.js: 10-54
+    - E:\github\xcatliu\cqc\src\test.js: 1-33
+      E:\github\xcatliu\cqc\src\test.js: 4-36
+    - E:\github\xcatliu\cqc\src\test.js: 1-55
+      E:\github\xcatliu\cqc\src\test.js: 40-94
 
-Max complexity:             13
-Complexity > 5  (count):    2
-Complexity > 10 (count):    2
-Complexity > 20 (count):    0
+High complexity rate:       11.11%
+High complexity count:      1
+Max complexity:             19
 Complexity details:
-    - /Users/xcatliu/Workspace/github/xcatliu/cqc/src/SlocChecker/index.1.js:
-        10-87: complexity: 13
-        88-114: complexity: 9
-    - /Users/xcatliu/Workspace/github/xcatliu/cqc/src/SlocChecker/index.2.js:
-        10-87: complexity: 13
-        88-114: complexity: 9
+    - E:\github\xcatliu\cqc\src\test.js:
+        1-38: complexity: 13
+        40-95: complexity: 19
 ```
+
+#### `--complexity-threshold`
+
+```sh
+cqc "src/**/*.js" --complexity-threshold 5
+```
+
+Default is `10`

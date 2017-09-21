@@ -6,6 +6,7 @@ const Linter = require('eslint').Linter;
 
 const BaseChecker = require('../BaseChecker');
 const eslintConfig = require('./eslintConfig');
+const defaultComplexityThreshold = 10;
 
 const linter = new Linter();
 
@@ -13,48 +14,43 @@ const COMPLEXITY = /complexity of (\d*)./;
 
 class ComplexityChecker extends BaseChecker {
     check(...args) {
-        const result = super.check(...args);
+        const baseResult = super.check(...args);
 
-        // Greater than 5 count
-        let gt5Count = 0;
-        let gt10Count = 0;
-        let gt20Count = 0;
+        this.complexityThreshold = this.getComplexityThreshold();
+
+        let count = 0;
         let max = 0;
 
         const details = this.fileList.map((filepath) => {
             return this.getEslintResultFromFilepath(filepath);
         }).filter((eslintResult) => {
-            if (eslintResult.maxComplexity > 20) {
-                gt20Count += 1;
+            max = Math.max(max, eslintResult.complexity);
+            if (eslintResult.complexity > this.complexityThreshold) {
+                count += 1;
+                return true;
             }
-            if (eslintResult.maxComplexity > 10) {
-                gt10Count += 1;
-            }
-            if (eslintResult.maxComplexity > 5) {
-                gt5Count += 1;
-            }
-            max = Math.max(max, eslintResult.maxComplexity);
-            return eslintResult.maxComplexity > 5;
+            return false;
         });
 
-        _.merge(result, {
-            complexity: {
-                max,
-                gt5Count,
-                gt10Count,
-                gt20Count,
-            }
-        });
+        let percentage = this.getPercentage(count);
 
         if (this.options.verbose) {
-            _.merge(result, {
+            return _.merge({}, baseResult, {
                 complexity: {
+                    percentage,
+                    count,
+                    max,
                     details
                 }
             });
         }
 
-        return result;
+        return _.merge({}, baseResult, {
+            complexity: {
+                percentage,
+                max
+            }
+        });
     }
     getEslintResultFromFilepath(filepath) {
         const extname = path.extname(filepath).slice(1);
@@ -62,7 +58,7 @@ class ComplexityChecker extends BaseChecker {
         if (extname !== 'js' && extname !== 'jsx') {
             return {
                 filepath: resolvedFilepath,
-                maxComplexity: 0,
+                complexity: 0,
                 details: []
             };
         }
@@ -80,12 +76,12 @@ class ComplexityChecker extends BaseChecker {
             maxComplexity = Math.max(maxComplexity, complexity);
             return _.merge({ complexity }, oneResult);
         }).filter(({ complexity }) => {
-            return complexity > 5;
+            return complexity > this.complexityThreshold;
         });
 
         return {
             filepath: resolvedFilepath,
-            maxComplexity,
+            complexity: maxComplexity,
             details: eslintResultWithComplexity
         };
     }
@@ -95,6 +91,17 @@ class ComplexityChecker extends BaseChecker {
             return Number(regExpResult[1]);
         }
         return 0;
+    }
+    getComplexityThreshold() {
+        if (this.options.complexityThreshold) {
+            return this.options.complexityThreshold;
+        }
+        return defaultComplexityThreshold;
+    }
+    getPercentage(count) {
+        let result = count / this.fileList.length * 100;
+        result = result.toFixed(2);
+        return result;
     }
 }
 

@@ -17,19 +17,18 @@ class BaseChecker {
 
         this.fileList = this.getFileList();
 
-        let result = {
-            numberOfFiles: this.fileList.length
-        };
-
         if (this.options.verbose) {
-            _.merge(result, {
+            return {
+                numberOfFiles: this.fileList.length,
                 fileList: this.fileList.map((filepath) => {
                     return path.resolve(filepath);
                 })
-            });
+            };
         }
 
-        return result;
+        return {
+            numberOfFiles: this.fileList.length
+        };
     }
     getFileList() {
         const { ignore } = this.options;

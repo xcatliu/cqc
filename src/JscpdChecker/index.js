@@ -14,7 +14,7 @@ const customRepoterPath = require.resolve('./reporter.js');
 
 class JscpdChecker extends BaseChecker {
     check(...args) {
-        const result = super.check(...args);
+        const baseResult = super.check(...args);
 
         const languages = this.getLanguages();
         const jscpdOptions = _.merge({
@@ -25,19 +25,21 @@ class JscpdChecker extends BaseChecker {
         });
         const jscpdResult = jscpd.run(jscpdOptions);
 
-        _.merge(result, {
-            jscpd: {
-                percentage: jscpdResult.report.statistics.percentage
-            }
-        });
-
         if (this.options.verbose) {
-            _.merge(result, {
+            return _.merge({}, baseResult, {
+                jscpd: {
+                    percentage: jscpdResult.report.statistics.percentage
+                }
+            }, {
                 jscpd: jscpdResult
             });
         }
 
-        return result;
+        return _.merge({}, baseResult, {
+            jscpd: {
+                percentage: jscpdResult.report.statistics.percentage
+            }
+        });
     }
     getLanguages() {
         const languages = [];

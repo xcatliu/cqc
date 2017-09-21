@@ -8,7 +8,7 @@ const BaseChecker = require('../BaseChecker');
 
 class SlocChecker extends BaseChecker {
     check(...args) {
-        const result = super.check(...args);
+        const baseResult = super.check(...args);
 
         const slocResult = this.fileList.reduce((prev, filepath) => {
             const fileContent = fs.readFileSync(filepath, 'utf-8');
@@ -30,16 +30,11 @@ class SlocChecker extends BaseChecker {
             todo: 0
         });
 
-        _.merge(result, {
-            sloc: {
-                source: slocResult.source
-            }
-        });
-
         if (this.options.verbose) {
-            _.merge(result, {
+            return _.merge({}, baseResult, {
                 sloc: {
                     total: slocResult.total,
+                    source: slocResult.source,
                     comment: slocResult.comment,
                     single: slocResult.single,
                     block: slocResult.block,
@@ -50,7 +45,11 @@ class SlocChecker extends BaseChecker {
             });
         }
 
-        return result;
+        return _.merge(baseResult, {
+            sloc: {
+                source: slocResult.source
+            }
+        });
     }
     getSlocTypeFromFilepath(filepath) {
         return path.extname(filepath).slice(1);
