@@ -10,11 +10,8 @@
 
 ## Supported Languages
 
-- js
-- jsx
-- css
-- less
-- scss
+- js, jsx
+- css, less, scss
 
 ## Getting Started
 
@@ -28,19 +25,20 @@ npm install -g cqc
 
 ```sh
 cqc [options] <pattern ...>
+# pattern is a string, you should wrap it by quotes
 ```
 
-Examples:
+Example:
 
 ```sh
-cqc src/**/*.js
+cqc "src/**/*.js"
 ```
 
 Output:
 
 ```
 Number of files:            8
-Source lines of code:        357
+Source lines of code:       357
 Duplicate rate:             5.62%
 Max complexity:             15
 Complexity > 5  (count):    3
@@ -51,33 +49,33 @@ Complexity > 20 (count):    0
 #### Multiple patterns
 
 ```sh
-cqc src/**/*.js src/**/*.jsx
+cqc "src/**/*.js,src/**/*.jsx"
 ```
 
 #### `--ignore-pattern`
 
 ```sh
-cqc src/**/*.js --ignore-pattern src/vendor/**/*.js
+cqc "src/**/*.js" --ignore-pattern "src/vendor/**/*.js"
 ```
 
 ```sh
-cqc src/**/*.js --ignore-pattern src/vendor/**/*.js,src/third-party/**/*.js
+cqc "src/**/*.js" --ignore-pattern "src/vendor/**/*.js,src/third-party/**/*.js"
 ```
 
 #### `--ignore-path`
 
 ```sh
-cqc src/**/*.js --ignore-path .gitignore
+cqc "src/**/*.js" --ignore-path ".gitignore"
 ```
 
 ```sh
-cqc src/**/*.js --ignore-path .gitignore,.eslintignore
+cqc "src/**/*.js" --ignore-path ".gitignore,.eslintignore"
 ```
 
 #### `--format`
 
 ```sh
-cqc src/**/*.js --format json
+cqc "src/**/*.js" --format json
 ```
 
 Output:
@@ -103,7 +101,7 @@ Output:
 #### `--verbose`
 
 ```sh
-cqc src/**/*.js --verbose
+cqc "src/**/*.js" --verbose
 ```
 
 Output:
