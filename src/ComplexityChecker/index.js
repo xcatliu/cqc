@@ -69,7 +69,8 @@ class ComplexityChecker extends BaseChecker {
 
         const fileContent = fs.readFileSync(filepath, 'utf-8');
         const eslintResult = linter.verify(fileContent, eslintConfig, {
-            filename: resolvedFilepath
+            filename: resolvedFilepath,
+            allowInlineConfig: false
         });
 
         let maxComplexity = 0;
