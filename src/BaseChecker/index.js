@@ -33,10 +33,13 @@ class BaseChecker {
     }
     getFileList() {
         const { ignore } = this.options;
+        const globbyOptions = {
+            nodir: true
+        };
         if (ignore) {
-            return globby.sync(this.patterns, { ignore });
+            globbyOptions.ignore = ignore;
         }
-        return globby.sync(this.patterns);
+        return globby.sync(this.patterns, globbyOptions);
     }
 }
 
