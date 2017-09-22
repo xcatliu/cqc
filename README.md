@@ -150,7 +150,7 @@ Concept | Definition
 ------- | ----------
 Number of files             | The number of input files
 Source lines of code        | The lines of code except commants and blank lines
-Lines of duplicated code    | Code (more than 5 lines) which is exactly the same between two files, or in different place of one file
+Lines of duplicated code    | Lines of code (more than 5 lines) which is exactly the same between two files, or in different place of one file
 Duplicate rate              | Lines of duplicated code / Source lines of code
 Complexity                  | https://en.wikipedia.org/wiki/Cyclomatic_complexity
 High complexity rate        | The number of files which has complexity more than 10 / Number of files
