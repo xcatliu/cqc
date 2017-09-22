@@ -1,7 +1,7 @@
 {
   "name": "cqc",
   "version": "0.2.0",
-  "description": "Code Quality Checker",
+  "description": "Code Quality Checker - Check your code quality by running one command.",
   "main": "src/CodeQualityChecker/index.js",
   "bin": {
     "cqc": "bin/cqc.js"
@@ -9,6 +9,13 @@
   "scripts": {
     "test": "node test/index.js"
   },
+  "keywords": [
+    "quality",
+    "code quality",
+    "complexity",
+    "duplicate",
+    "sloc"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/xcatliu/cqc.git"
