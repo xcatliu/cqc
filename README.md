@@ -18,12 +18,6 @@ npm install -g cqc
 ### Usage
 
 ```sh
-cqc [options] <pattern ...>
-```
-
-Example:
-
-```sh
 cqc src/**/*.js src/**/*.jsx
 ```
 
@@ -45,7 +39,7 @@ Option | Type | Default | Description
 `--ignore-path` | path joined by `,` | | Specify path of ignore file
 `-f`, `--format` | string | | Specify an output format. Supported format: json
 `--verbose` | | | Verbose mode. A lot more information output
-`--complexity-threshold` | number | 10 | Set the complexity threshold
+`--complexity-threshold` | number | `10` | Set the complexity threshold
 
 Examples:
 
