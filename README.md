@@ -23,13 +23,12 @@ npm install -g cqc
 
 ```sh
 cqc [options] <pattern ...>
-# pattern is a string, you should wrap it by quotes
 ```
 
 Example:
 
 ```sh
-cqc "src/**/*.js"
+cqc src/**/*.js src/**/*.jsx
 ```
 
 Output:
@@ -42,36 +41,34 @@ High complexity rate:   11.11%
 Max complexity:         19
 ```
 
-#### Multiple patterns
+### Options
+
+Option | Type | Default | Description
+------ | ---- | ------- | -----------
+`--ignore-pattern` | pattern joined by `,` | | Pattern of files to ignore
+`--ignore-path` | path joined by `,` | | Specify path of ignore file
+`-f`, `--format` | string | | Specify an output format. Supported format: json
+`--verbose` | | | Verbose mode. A lot more information output
+`--complexity-threshold` | number | 10 | Set the complexity threshold
+
+Examples:
+
+#### Ignore vendors and third-party libraries
 
 ```sh
-cqc "src/**/*.js,src/**/*.jsx"
+cqc src/**/*.js --ignore-pattern "src/vendor/**/*.js,src/third-party/**/*.js"
 ```
 
-#### `--ignore-pattern`
+#### Set the ignore file path
 
 ```sh
-cqc "src/**/*.js" --ignore-pattern "src/vendor/**/*.js"
+cqc src/**/*.js --ignore-path ".gitignore,.eslintignore"
 ```
 
-```sh
-cqc "src/**/*.js" --ignore-pattern "src/vendor/**/*.js,src/third-party/**/*.js"
-```
-
-#### `--ignore-path`
+#### Output json format
 
 ```sh
-cqc "src/**/*.js" --ignore-path ".gitignore"
-```
-
-```sh
-cqc "src/**/*.js" --ignore-path ".gitignore,.eslintignore"
-```
-
-#### `--format`
-
-```sh
-cqc "src/**/*.js" --format json
+cqc src/**/*.js --format json
 ```
 
 Output:
@@ -92,10 +89,10 @@ Output:
 }
 ```
 
-#### `--verbose`
+#### Verbose mode
 
 ```sh
-cqc "src/**/*.js" --verbose
+cqc src/**/*.js --verbose
 ```
 
 Output:
@@ -141,10 +138,28 @@ Complexity details:
         40-95: complexity: 19
 ```
 
-#### `--complexity-threshold`
+#### Set the complexity threshold
 
 ```sh
-cqc "src/**/*.js" --complexity-threshold 5
+cqc src/**/*.js --complexity-threshold 5
 ```
 
-Default is `10`
+## Concept Definition
+
+- Number of files:          The number of input files
+- Source lines of code:     The lines of code except commants and blank lines
+- Lines of duplicated code: Code (more than 5 lines) which is exactly the same between two files, or in different place of one file
+- Duplicate rate:           Lines of duplicated code / Source lines of code
+- Complexity:               https://en.wikipedia.org/wiki/Cyclomatic_complexity
+- High complexity rate:     The number of files which has complexity more than 10 / Number of files
+- Max complexity:           The highest complexity of all input files
+
+## Troubleshootings
+
+### Why `cqc src/**/*.js` only identify the files under two-level dir?
+
+Some shell has different behavior between others. Please try to wrap the pattern by quotes:
+
+```sh
+cqc "src/**/*.js"
+```

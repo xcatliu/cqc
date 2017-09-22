@@ -4,6 +4,7 @@ const fs = require('fs');
 const program = require('commander');
 
 const pkg = require('../package.json');
+
 const CodeQualityChecker = require('..');
 const codeQualityChecker = new CodeQualityChecker();
 
@@ -12,14 +13,14 @@ const whiteSpaceOrComma = /[\s,]+/;
 program
     .version(pkg.version)
     .usage('[options] <pattern ...>')
-    .option('--ignore-path <file>', 'Specify path of ignore file')
     .option('--ignore-pattern <pattern>', 'Pattern of files to ignore')
-    .option('-f, --format <string>', 'Specify an output format, e.g. json')
-    .option('-v, --verbose', 'Verbose mode. A lot more information output.')
+    .option('--ignore-path <path>', 'Specify path of ignore file')
+    .option('-f, --format <string>', 'Specify an output format. Supported format: json')
+    .option('-v, --verbose', 'Verbose mode. A lot more information output')
     .option('--complexity-threshold <number>', 'Set the complexity threshold, default to 10')
     .parse(process.argv);
 
-const files = program.args;
+let files = program.args;
 
 let ignorePattern = [];
 if (program.ignorePath) {
