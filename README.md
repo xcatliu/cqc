@@ -1,10 +1,6 @@
 # Code Quality Checker
 
-- Number of files
-- Source lines of code
-- Duplicate rate
-- High complexity rate
-- Max complexity
+Check your code quality by running one command.
 
 ## Supported Languages
 
