@@ -4,6 +4,7 @@ const BaseChecker = require('../BaseChecker');
 const SlocChecker = require('../SlocChecker');
 const JscpdChecker = require('../JscpdChecker');
 const ComplexityChecker = require('../ComplexityChecker');
+const CheckerResult = require('../CheckerResult');
 
 class CodeQualityChecker extends BaseChecker {
     constructor(...args) {
@@ -18,7 +19,7 @@ class CodeQualityChecker extends BaseChecker {
         const jscpdResult = this.jscpdChecker.check(...args);
         const complexityChecker = this.complexityChecker.check(...args);
 
-        return _.merge({}, baseResult, slocResult, jscpdResult, complexityChecker);
+        return new CheckerResult(_.merge({}, baseResult, slocResult, jscpdResult, complexityChecker));
     }
 }
 

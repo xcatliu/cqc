@@ -6,7 +6,9 @@ const Linter = require('eslint').Linter;
 
 const BaseChecker = require('../BaseChecker');
 const eslintConfig = require('./eslintConfig');
-const defaultComplexityThreshold = 10;
+const CheckerResult = require('../CheckerResult');
+
+const defaultComplexityMax = 10;
 
 const linter = new Linter();
 
@@ -16,8 +18,6 @@ class ComplexityChecker extends BaseChecker {
     check(...args) {
         const baseResult = super.check(...args);
 
-        this.complexityThreshold = this.getComplexityThreshold();
-
         let count = 0;
         let max = 0;
 
@@ -25,7 +25,7 @@ class ComplexityChecker extends BaseChecker {
             return this.getEslintResultFromFilepath(filepath);
         }).filter((eslintResult) => {
             max = Math.max(max, eslintResult.complexity);
-            if (eslintResult.complexity > this.complexityThreshold) {
+            if (eslintResult.complexity > this.getComplexityMax()) {
                 count += 1;
                 return true;
             }
@@ -34,23 +34,14 @@ class ComplexityChecker extends BaseChecker {
 
         let percentage = this.getPercentage(count);
 
-        if (this.options.verbose) {
-            return _.merge({}, baseResult, {
-                complexity: {
-                    percentage,
-                    count,
-                    max,
-                    details
-                }
-            });
-        }
-
-        return _.merge({}, baseResult, {
+        return new CheckerResult(_.merge({}, baseResult, {
             complexity: {
                 percentage,
-                max
+                count,
+                max,
+                details
             }
-        });
+        }));
     }
     getEslintResultFromFilepath(filepath) {
         const extname = path.extname(filepath).slice(1);
@@ -76,7 +67,7 @@ class ComplexityChecker extends BaseChecker {
             maxComplexity = Math.max(maxComplexity, complexity);
             return _.merge({ complexity }, oneResult);
         }).filter(({ complexity }) => {
-            return complexity > this.complexityThreshold;
+            return complexity > this.getComplexityMax();
         });
 
         return {
@@ -92,11 +83,11 @@ class ComplexityChecker extends BaseChecker {
         }
         return 0;
     }
-    getComplexityThreshold() {
-        if (this.options.complexityThreshold) {
-            return this.options.complexityThreshold;
+    getComplexityMax() {
+        if (this.options.complexityMax) {
+            return this.options.complexityMax;
         }
-        return defaultComplexityThreshold;
+        return defaultComplexityMax;
     }
     getPercentage(count) {
         let result = count / this.fileList.length * 100;

@@ -9,8 +9,9 @@ const jscpd = new JsCpd();
 
 const BaseChecker = require('../BaseChecker');
 const getLanguageFromFilepath = require('./getLanguageFromFilepath');
+const CheckerResult = require('../CheckerResult');
 
-const customRepoterPath = require.resolve('./reporter.js');
+const customRepoterPath = require.resolve('./jscpdReporter.js');
 
 class JscpdChecker extends BaseChecker {
     check(...args) {
@@ -25,21 +26,13 @@ class JscpdChecker extends BaseChecker {
         });
         const jscpdResult = jscpd.run(jscpdOptions);
 
-        if (this.options.verbose) {
-            return _.merge({}, baseResult, {
-                jscpd: {
-                    percentage: jscpdResult.report.statistics.percentage
-                }
-            }, {
-                jscpd: jscpdResult
-            });
-        }
-
-        return _.merge({}, baseResult, {
+        return new CheckerResult(_.merge({}, baseResult, {
             jscpd: {
                 percentage: jscpdResult.report.statistics.percentage
             }
-        });
+        }, {
+            jscpd: jscpdResult
+        }));
     }
     getLanguages() {
         const languages = [];

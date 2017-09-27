@@ -5,6 +5,7 @@ const _ = require('lodash');
 const sloc = require('sloc');
 
 const BaseChecker = require('../BaseChecker');
+const CheckerResult = require('../CheckerResult');
 
 class SlocChecker extends BaseChecker {
     check(...args) {
@@ -30,26 +31,18 @@ class SlocChecker extends BaseChecker {
             todo: 0
         });
 
-        if (this.options.verbose) {
-            return _.merge({}, baseResult, {
-                sloc: {
-                    total: slocResult.total,
-                    source: slocResult.source,
-                    comment: slocResult.comment,
-                    single: slocResult.single,
-                    block: slocResult.block,
-                    mixed: slocResult.mixed,
-                    empty: slocResult.empty,
-                    todo: slocResult.todo
-                }
-            });
-        }
-
-        return _.merge(baseResult, {
+        return new CheckerResult(_.merge({}, baseResult, {
             sloc: {
-                source: slocResult.source
+                total: slocResult.total,
+                source: slocResult.source,
+                comment: slocResult.comment,
+                single: slocResult.single,
+                block: slocResult.block,
+                mixed: slocResult.mixed,
+                empty: slocResult.empty,
+                todo: slocResult.todo
             }
-        });
+        }));
     }
     getSlocTypeFromFilepath(filepath) {
         return path.extname(filepath).slice(1);
