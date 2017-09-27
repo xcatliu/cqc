@@ -15,11 +15,19 @@ class CodeQualityChecker extends BaseChecker {
     }
     check(...args) {
         const baseResult = super.check(...args);
-        const slocResult = this.slocChecker.check(...args);
-        const jscpdResult = this.jscpdChecker.check(...args);
-        const complexityChecker = this.complexityChecker.check(...args);
 
-        return new CheckerResult(_.merge({}, baseResult, slocResult, jscpdResult, complexityChecker));
+        const result = _.merge({}, baseResult);
+        if (!this.options.disableSloc) {
+            _.merge(result, this.slocChecker.check(...args));
+        }
+        if (!this.options.disableJscpd) {
+            _.merge(result, this.jscpdChecker.check(...args));
+        }
+        if (!this.options.disableComplexity) {
+            _.merge(result, this.complexityChecker.check(...args));
+        }
+
+        return new CheckerResult(result);
     }
 }
 

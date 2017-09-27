@@ -1,4 +1,34 @@
 function Welcome(props) {
+    if (foo1) {
+        console.log(foo1);
+    }
+    if (foo2) {
+        console.log(foo2);
+    }
+    if (foo3) {
+        console.log(foo3);
+    }
+    if (foo4) {
+        console.log(foo4);
+    }
+    if (foo5) {
+        console.log(foo5);
+    }
+    if (foo6) {
+        console.log(foo6);
+    }
+    if (foo7) {
+        console.log(foo7);
+    }
+    if (foo8) {
+        console.log(foo8);
+    }
+    if (foo9) {
+        console.log(foo9);
+    }
+    if (foo10) {
+        console.log(foo10);
+    }
     return <h1>Hello, {props.name}</h1>;
 }
 
@@ -13,6 +43,42 @@ function App() {
     );
 
     function HelloWorld() {
+        for (i = foo; i < bar; i++) {
+            console.log(i);
+        }
+        for (i = foo; i < bar; i++) {
+            console.log(i);
+        }
+        for (i = foo; i < bar; i++) {
+            console.log(i);
+        }
+        for (i = foo; i < bar; i++) {
+            console.log(i);
+        }
+        for (i = foo; i < bar; i++) {
+            console.log(i);
+        }
+        for (i = foo; i < bar; i++) {
+            console.log(i);
+        }
+        for (i = foo; i < bar; i++) {
+            console.log(i);
+        }
+        for (i = foo; i < bar; i++) {
+            console.log(i);
+        }
+        for (i = foo; i < bar; i++) {
+            console.log(i);
+        }
+        for (i = foo; i < bar; i++) {
+            console.log(i);
+        }
+        for (i = foo; i < bar; i++) {
+            console.log(i);
+        }
+        for (i = foo; i < bar; i++) {
+            console.log(i);
+        }
         return (
             <div>
                 Hello World 1
