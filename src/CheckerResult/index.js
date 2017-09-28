@@ -1,25 +1,21 @@
 const _ = require('lodash');
 
-const defaultReporter = require('./reporter');
-
-const defaultOptions = {
-    verbose: false
-};
+// Use Symbol to create private variables
+// https://curiosity-driven.org/private-properties-in-javascript
+const _baseOptions = Symbol('baseOptions');
 
 class CheckerResult {
-    constructor(checkResult) {
-        Object.keys(checkResult).forEach((key) => {
-            this[key] = checkResult[key];
+    constructor(resultObject, options = {}) {
+        this[_baseOptions] = options;
+
+        Object.keys(resultObject).forEach((key) => {
+            this[key] = resultObject[key];
         });
     }
     report(options = {}) {
-        let reporter = options.reporter || defaultReporter;
+        const reporterOptions = _.merge({}, this[_baseOptions], options);
 
-        reporter(this, _.merge({}, defaultOptions, _.pick(options, [
-            'format',
-            'verbose',
-            'filterPattern'
-        ])));
+        reporterOptions.cqcReporter(this, reporterOptions);
     }
 }
 

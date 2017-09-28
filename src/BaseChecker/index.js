@@ -5,25 +5,38 @@ const _ = require('lodash');
 const globby = require('globby');
 
 const CheckerResult = require('../CheckerResult');
+const defaultCqcReporter = require('../CheckerResult/cqcReporter');
 
 const whiteSpaceOrComma = /[\s,]+/;
+const defaultOptions = {
+    jscpdMinLines: 5,
+    jscpdMinTokens: 70,
+    complexityMax: 10,
+    cqcReporter: defaultCqcReporter
+};
+
+// Use Symbol to create private variables
+// https://curiosity-driven.org/private-properties-in-javascript
+const _baseOptions = Symbol('baseOptions');
 
 class BaseChecker {
     constructor(options = {}) {
-        this.baseOptions = options;
+        this[_baseOptions] = _.merge({}, defaultOptions, options);
     }
     check(patterns, options = {}) {
         this.patterns = patterns;
-        this.options = _.merge({}, this.baseOptions, options);
+        this.options = _.merge({}, this[_baseOptions], options);
 
         this.fileList = this.getFileList();
 
-        return new CheckerResult({
+        const result = {
             numberOfFiles: this.fileList.length,
             fileList: this.fileList.map((filepath) => {
                 return path.resolve(filepath);
             })
-        });
+        };
+
+        return new CheckerResult(result, this.options);
     }
     getFileList() {
         const { ignorePath, ignorePattern } = this.options;

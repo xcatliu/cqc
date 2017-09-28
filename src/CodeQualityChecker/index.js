@@ -27,7 +27,7 @@ class CodeQualityChecker extends BaseChecker {
             _.merge(result, this.complexityChecker.check(...args));
         }
 
-        return new CheckerResult(result);
+        return new CheckerResult(result, this.options);
     }
 }
 

@@ -8,8 +8,6 @@ const BaseChecker = require('../BaseChecker');
 const eslintConfig = require('./eslintConfig');
 const CheckerResult = require('../CheckerResult');
 
-const defaultComplexityMax = 10;
-
 const linter = new Linter();
 
 const COMPLEXITY = /complexity of (\d*)./;
@@ -25,23 +23,24 @@ class ComplexityChecker extends BaseChecker {
             return this.getEslintResultFromFilepath(filepath);
         }).filter((eslintResult) => {
             max = Math.max(max, eslintResult.complexity);
-            if (eslintResult.complexity > this.getComplexityMax()) {
+            if (eslintResult.complexity > this.options.complexityMax) {
                 count += 1;
                 return true;
             }
             return false;
         });
 
-        let percentage = this.getPercentage(count);
-
-        return new CheckerResult(_.merge({}, baseResult, {
+        const percentage = this.getPercentage(count);
+        const result = _.merge({}, baseResult, {
             complexity: {
                 percentage,
                 count,
                 max,
                 details
             }
-        }));
+        });
+
+        return new CheckerResult(result, this.options);
     }
     getEslintResultFromFilepath(filepath) {
         const extname = path.extname(filepath).slice(1);
@@ -67,7 +66,7 @@ class ComplexityChecker extends BaseChecker {
             maxComplexity = Math.max(maxComplexity, complexity);
             return _.merge({ complexity }, oneResult);
         }).filter(({ complexity }) => {
-            return complexity > this.getComplexityMax();
+            return complexity > this.options.complexityMax;
         });
 
         return {
@@ -82,12 +81,6 @@ class ComplexityChecker extends BaseChecker {
             return Number(regExpResult[1]);
         }
         return 0;
-    }
-    getComplexityMax() {
-        if (this.options.complexityMax) {
-            return this.options.complexityMax;
-        }
-        return defaultComplexityMax;
     }
     getPercentage(count) {
         let result = count / this.fileList.length * 100;

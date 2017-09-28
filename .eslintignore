@@ -1,1 +1,4 @@
-test/sample
+test/sample/one.js
+test/sample/three.js
+test/sample/subFolder/*.js
+test/sample/subFolder/six.jsx

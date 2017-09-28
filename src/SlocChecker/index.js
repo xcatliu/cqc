@@ -31,7 +31,7 @@ class SlocChecker extends BaseChecker {
             todo: 0
         });
 
-        return new CheckerResult(_.merge({}, baseResult, {
+        const result = _.merge({}, baseResult, {
             sloc: {
                 total: slocResult.total,
                 source: slocResult.source,
@@ -42,7 +42,9 @@ class SlocChecker extends BaseChecker {
                 empty: slocResult.empty,
                 todo: slocResult.todo
             }
-        }));
+        });
+
+        return new CheckerResult(result, this.options);
     }
     getSlocTypeFromFilepath(filepath) {
         return path.extname(filepath).slice(1);

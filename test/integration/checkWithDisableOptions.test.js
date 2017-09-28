@@ -1,30 +1,10 @@
 const assert = require('chai').assert;
-const sinon = require('sinon');
 
 const CodeQualityChecker = require('../../');
 const codeQualityChecker = new CodeQualityChecker();
 
-describe('Basic', () => {
-    beforeEach(function () {
-        this.sinon = sinon.sandbox.create();
-    });
-    afterEach(function () {
-        this.sinon.restore();
-    });
-
-    describe('check without options', () => {
-        const cqcResult = codeQualityChecker.check([
-            'test/sample/**/*.js',
-            'test/sample/**/*.jsx'
-        ]);
-        cqcResult.report();
-        baseAssertion(cqcResult);
-        slocAssertion(cqcResult);
-        jscpdAssertion(cqcResult);
-        complexityAssertion(cqcResult);
-    });
-
-    describe('check with option disableSloc', () => {
+describe('Check with disable options', () => {
+    describe('disableSloc', () => {
         const cqcResult = codeQualityChecker.check([
             'test/sample/**/*.js',
             'test/sample/**/*.jsx'
@@ -39,7 +19,7 @@ describe('Basic', () => {
         complexityAssertion(cqcResult);
     });
 
-    describe('check with option disableJscpd', () => {
+    describe('disableJscpd', () => {
         const cqcResult = codeQualityChecker.check([
             'test/sample/**/*.js',
             'test/sample/**/*.jsx'
@@ -54,7 +34,7 @@ describe('Basic', () => {
         complexityAssertion(cqcResult);
     });
 
-    describe('check with option disableComplexity', () => {
+    describe('disableComplexity', () => {
         const cqcResult = codeQualityChecker.check([
             'test/sample/**/*.js',
             'test/sample/**/*.jsx'
@@ -69,7 +49,7 @@ describe('Basic', () => {
         });
     });
 
-    describe('check with option disableSloc and disableJscpd', () => {
+    describe('disableSloc and disableJscpd', () => {
         const cqcResult = codeQualityChecker.check([
             'test/sample/**/*.js',
             'test/sample/**/*.jsx'
@@ -85,107 +65,6 @@ describe('Basic', () => {
             assert.isUndefined(cqcResult.jscpd);
         });
         complexityAssertion(cqcResult);
-    });
-
-
-    describe('report without options', () => {
-        const cqcResult = codeQualityChecker.check([
-            'test/sample/**/*.js',
-            'test/sample/**/*.jsx'
-        ]);
-        it('Should match provided console.log result', function () {
-            this.sinon.spy(console, 'log');
-
-            cqcResult.report();
-
-            this.sinon.assert.calledWith(console.log, `Number of files:        6
-Source lines of code:   266
-Duplicate rate:         21.21%
-High complexity rate:   33.33%
-Max complexity:         16`);
-        });
-    });
-
-    describe('report with options format=json', () => {
-        const cqcResult = codeQualityChecker.check([
-            'test/sample/**/*.js',
-            'test/sample/**/*.jsx'
-        ]);
-        it('Should match provided console.log result', function () {
-            this.sinon.spy(console, 'log');
-
-            cqcResult.report({
-                format: 'json'
-            });
-
-            this.sinon.assert.calledWith(console.log, `{
-    "numberOfFiles": 6,
-    "sloc": {
-        "source": 266
-    },
-    "jscpd": {
-        "percentage": "21.21"
-    },
-    "complexity": {
-        "percentage": "33.33",
-        "max": 16
-    }
-}`);
-        });
-    });
-
-    describe('report with options verbose=true', () => {
-        const cqcResult = codeQualityChecker.check([
-            'test/sample/**/*.js',
-            'test/sample/**/*.jsx'
-        ]);
-        it('Should match provided console.log result', function () {
-            this.sinon.spy(console, 'log');
-
-            cqcResult.report({
-                verbose: true
-            });
-
-            this.sinon.assert.calledWith(console.log, `Number of files: 6
-File list:
-    - /Users/xcatliu/Workspace/github/xcatliu/cqc/test/sample/one.js
-    - /Users/xcatliu/Workspace/github/xcatliu/cqc/test/sample/subFolder/five.js
-    - /Users/xcatliu/Workspace/github/xcatliu/cqc/test/sample/three.js
-    - /Users/xcatliu/Workspace/github/xcatliu/cqc/test/sample/two.js
-    - /Users/xcatliu/Workspace/github/xcatliu/cqc/test/sample/four.jsx
-    - /Users/xcatliu/Workspace/github/xcatliu/cqc/test/sample/subFolder/six.jsx
-
-Physical lines:             291
-Source lines of code:       266
-Comments:                   9
-Single-line comments:       9
-Block comments:             0
-Mixed source and comments:  0
-Empty lines:                16
-TODO's:                     0
-
-Duplicate rate:             21.21%
-Files of duplicated code:   4
-Count of duplicated code:   3
-Lines of duplicated code:   63
-Duplication details:
-    - /Users/xcatliu/Workspace/github/xcatliu/cqc/test/sample/one.js: 27-39
-      /Users/xcatliu/Workspace/github/xcatliu/cqc/test/sample/subFolder/five.js: 1-13
-    - /Users/xcatliu/Workspace/github/xcatliu/cqc/test/sample/one.js: 1-17
-      /Users/xcatliu/Workspace/github/xcatliu/cqc/test/sample/two.js: 1-17
-    - /Users/xcatliu/Workspace/github/xcatliu/cqc/test/sample/subFolder/six.jsx: 45-77
-      /Users/xcatliu/Workspace/github/xcatliu/cqc/test/sample/subFolder/six.jsx: 48-80
-
-High complexity rate:       33.33%
-High complexity count:      2
-Max complexity:             16
-Complexity details:
-    - /Users/xcatliu/Workspace/github/xcatliu/cqc/test/sample/three.js
-        1-47: complexity 16
-    - /Users/xcatliu/Workspace/github/xcatliu/cqc/test/sample/subFolder/six.jsx
-        1-33: complexity 11
-        45-95: complexity 13`);
-        });
     });
 });
 

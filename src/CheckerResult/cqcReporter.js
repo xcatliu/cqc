@@ -1,34 +1,94 @@
+const _ = require('lodash');
+const globby = require('globby');
+
 const newLine = `
 `;
+const whiteSpaceOrComma = /[\s,]+/;
 
-function reporter(checkerResult, options = {}) {
+function cqcReporter(resultObject, options = {}) {
     const {
         format,
         verbose,
-        // filterPattern
+        thresholdJscpd,
+        thresholdComplexity
     } = options;
 
-    let result;
-    if (verbose) {
-        result = checkerResult;
-    } else {
-        result = simplifyResult(checkerResult);
-    }
+    // Add threshold to JSON, add filter details if necessary
+    const result = processResult(resultObject, options);
 
     if (format === 'json') {
-        console.log(JSON.stringify(result, null, 4));
+        logJSON(result, options);
         return;
     }
 
     if (verbose) {
-        console.log(getVerboseLog(result));
-        return;
+        logVerbose(result);
+    } else {
+        logSimple(result);
     }
-
-    console.log(getSimpleLog(result));
+    // Log a new line if threshold is given
+    if (typeof thresholdJscpd !== 'undefined' || typeof thresholdComplexity !== 'undefined') {
+        console.log('');
+    }
+    logThreshold(result, options);
 }
 
-function simplifyResult(result) {
+function processResult(resultObject, options) {
+    const {
+        verbose,
+        thresholdJscpd,
+        thresholdComplexity,
+        filterPattern
+    } = options;
+
+    if (!verbose) {
+        return simplifyResult(resultObject, options);
+    }
+
+    const result = _.merge({}, resultObject);
+    if (result.jscpd && typeof thresholdJscpd !== 'undefined') {
+        result.jscpd.threshold = thresholdJscpd;
+    }
+    if (result.complexity && typeof thresholdComplexity !== 'undefined') {
+        result.complexity.threshold = thresholdComplexity;
+    }
+
+    if (filterPattern) {
+        const filterFileList = getFilterFileList(filterPattern);
+        console.log(filterFileList);
+    }
+
+
+    return result;
+}
+
+function getFilterFileList(filterPattern) {
+    let filterPatternList = filterPattern.split(whiteSpaceOrComma);
+
+    const globbyOptions = {
+        nodir: true
+    };
+
+    return globby.sync(filterPatternList, globbyOptions);
+}
+
+function logJSON(result, { verbose, thresholdJscpd, thresholdComplexity }) {
+    let shouldExit = false;
+
+    if (typeof thresholdJscpd !== 'undefined' && result.jscpd.percentage > thresholdJscpd) {
+        shouldExit = true;
+    }
+    if (typeof thresholdComplexity !== 'undefined' && result.complexity.percentage > thresholdComplexity) {
+        shouldExit = true;
+    }
+
+    console.log(JSON.stringify(result, null, 4));
+    if (shouldExit) {
+        process.exit(1);
+    }
+}
+
+function simplifyResult(result, { thresholdJscpd, thresholdComplexity }) {
     const simplifiedResult = {};
 
     if (typeof result.numberOfFiles !== 'undefined') {
@@ -43,18 +103,24 @@ function simplifyResult(result) {
         simplifiedResult.jscpd = {
             percentage: result.jscpd.percentage
         };
+        if (typeof thresholdJscpd !== 'undefined') {
+            simplifiedResult.jscpd.threshold = thresholdJscpd;
+        }
     }
     if (result.complexity) {
         simplifiedResult.complexity = {
             percentage: result.complexity.percentage,
             max: result.complexity.max
         };
+        if (typeof thresholdComplexity !== 'undefined') {
+            simplifiedResult.complexity.threshold = thresholdComplexity;
+        }
     }
 
     return simplifiedResult;
 }
 
-function getVerboseLog(result) {
+function logVerbose(result) {
     let logArray = [];
 
     // Files
@@ -117,10 +183,10 @@ function getVerboseLog(result) {
         }
     }
 
-    return logArray.join(newLine);
+    console.log(logArray.join(newLine));
 }
 
-function getSimpleLog(result) {
+function logSimple(result) {
     let logArray = [];
 
     if (typeof result.numberOfFiles !== 'undefined') {
@@ -137,7 +203,33 @@ function getSimpleLog(result) {
         logArray.push(`Max complexity:         ${result.complexity.max}`);
     }
 
-    return logArray.join(newLine);
+    console.log(logArray.join(newLine));
 }
 
-module.exports = reporter;
+function logThreshold(result, { verbose, thresholdJscpd, thresholdComplexity }) {
+    let shouldExit = false;
+
+    if (typeof thresholdJscpd !== 'undefined') {
+        if (result.jscpd.percentage > thresholdJscpd) {
+            shouldExit = true;
+            console.error(`Oops, duplicate rate is MORE than threshold ${thresholdJscpd}%, please check the details${verbose ? '' : ' by adding --verbose option'}.`);
+        } else {
+            console.log(`Good, duplicate rate is LESS than threshold ${thresholdJscpd}%`);
+        }
+    }
+
+    if (typeof thresholdComplexity !== 'undefined') {
+        if (result.complexity.percentage > thresholdComplexity) {
+            shouldExit = true;
+            console.error(`Oops, high complexity rate is MORE than threshold ${thresholdComplexity}%, please check the details${verbose ? '' : ' by adding --verbose option'}.`);
+        } else {
+            console.log(`Good, high complexity rate is LESS than threshold ${thresholdComplexity}%`);
+        }
+    }
+
+    if (shouldExit) {
+        process.exit(1);
+    }
+}
+
+module.exports = cqcReporter;

@@ -8,37 +8,48 @@ const CodeQualityChecker = require('..');
 program
     .version(pkg.version)
     .usage('[options] <pattern ...>')
+    // Ignore options
     .option('--ignore-path <path>', 'Specify path of ignore file')
     .option('--ignore-pattern <pattern>', 'Pattern of files to ignore')
+    // Script options
+    .option('--jscpd-min-lines <number>', 'Set the min size of duplication in code lines, default to 5')
+    .option('--jscpd-min-tokens <number>', 'Set the min size of duplication in code tokens, default to 70')
     .option('--complexity-max <number>', 'Set the complexity threshold, default to 10')
-    .option('--jscpd-limit <number>', 'Set the limit of allowed duplications, default to 50')
+    // Disable options
     .option('--disable-sloc', 'Disable sloc checker')
     .option('--disable-jscpd', 'Disable jscpd checker')
     .option('--disable-complexity', 'Disable complexity checker')
+    // Reporter options
     .option('-f, --format <string>', 'Specify an output format. Supported format: json')
     .option('--verbose', 'Verbose mode. A lot more information output')
-    .option('--filter-pattern <pattern>', 'Only output files related to the filter pattern')
-    .option('-r, --reporter')
+    .option('--threshold-jscpd <number>', 'Set the jscpd threshold')
+    .option('--threshold-complexity <number>', 'Set the complexity threshold')
+    .option('--filter-pattern <pattern>', 'Output percentage of all files but only details that related to the filter pattern')
+    .option('--cqc-reporter <path>', 'Specify a custom reporter, default to cqc/src/CheckerResult/cqcReporter.js')
     .parse(process.argv);
 
 const patterns = program.args;
 const checkOptions = _.pick(program, [
     'ignorePath',
     'ignorePattern',
+
+    'jscpdMinLines',
+    'jspcdMinTokens',
     'complexityMax',
-    'jscpdLimit',
+
     'disableSloc',
     'disableJscpd',
-    'disableComplexity'
-]);
-const reportOptions = _.pick(program, [
+    'disableComplexity',
+
     'format',
     'verbose',
+    'thresholdJscpd',
+    'thresholdComplexity',
     'filterPattern',
-    'reporter'
+    'cqcReporter'
 ]);
 
 const codeQualityChecker = new CodeQualityChecker();
 codeQualityChecker
     .check(patterns, checkOptions)
-    .report(reportOptions);
+    .report();
