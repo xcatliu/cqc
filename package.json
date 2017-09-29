@@ -7,7 +7,8 @@
     "cqc": "bin/cqc.js"
   },
   "scripts": {
-    "test": "_mocha"
+    "test": "_mocha",
+    "cover": "istanbul cover node_modules/mocha/bin/_mocha"
   },
   "keywords": [
     "quality",
@@ -39,6 +40,7 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "eslint-config-alloy": "^1.2.1",
+    "istanbul": "^0.4.5",
     "mocha": "^3.5.3",
     "sinon": "^4.0.0"
   }
