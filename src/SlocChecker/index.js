@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 
-const _ = require('lodash');
 const sloc = require('sloc');
 
 const BaseChecker = require('../BaseChecker');

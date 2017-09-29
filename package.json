@@ -7,8 +7,10 @@
     "cqc": "bin/cqc.js"
   },
   "scripts": {
-    "test": "_mocha",
-    "coveralls": "istanbul cover node_modules/mocha/bin/_mocha"
+    "lint": "eslint .",
+    "test": "npm run lint && _mocha",
+    "cover": "istanbul cover node_modules/mocha/bin/_mocha",
+    "coveralls": "npm run cover -- --report lcovonly && cat ./coverage/lcov.info | coveralls"
   },
   "keywords": [
     "quality",
