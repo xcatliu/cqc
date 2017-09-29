@@ -53,8 +53,8 @@ Disable options |
 Reporter options |
 `-f`, `--format` | string | | Specify an output format. Supported format: json
 `--verbose` | | | Verbose mode. A lot more information output
-`--threshold-jscpd` | number | | Set the jscpd threshold
-`--threshold-complexity` | number | | Set the complexity threshold
+`--threshold-jscpd` | number | | Set the jscpd threshold, process will exit if duplicate rate is more than threshold
+`--threshold-complexity` | number | | Set the complexity threshold, process will exit if complexity rate is more than threshold
 
 Examples:
 
@@ -142,10 +142,22 @@ High complexity count:      0
 Max complexity:             10
 ```
 
-#### Set the complexity threshold
+#### Set the jscpd threshold
 
 ```sh
-cqc src/**/*.js --complexity-threshold 5
+cqc src/**/*.js --threshold-jscpd 3
+```
+
+Output:
+
+```
+Number of files:        10
+Source lines of code:   646
+Duplicate rate:         3.46%
+High complexity rate:   0.00%
+Max complexity:         10
+
+Oops, duplicate rate is MORE than threshold 3%, please check the details by adding --verbose option.
 ```
 
 ## Concept Definition
