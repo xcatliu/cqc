@@ -44,7 +44,7 @@ Files options |
 Script options |
 `--jscpd-min-lines` | number | `5` | Set the min size of duplication in code lines
 `--jscpd-min-tokens` | number | `70` | Set the min size of duplication in code tokens
-`--complexity-max` | number | `10` | Set the complexity threshold
+`--complexity-max` | number | `10` | Set the allowed max complexity of a function
 Disable options |
 `--disable-base` | | | Disable base checker
 `--disable-sloc` | | | Disable sloc checker
