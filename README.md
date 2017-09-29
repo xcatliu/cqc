@@ -58,16 +58,16 @@ Reporter options |
 
 Examples:
 
-#### Ignore vendors and third-party libraries
-
-```sh
-cqc src/**/*.js --ignore-pattern "src/vendor/**/*.js,src/third-party/**/*.js"
-```
-
 #### Set the ignore file path
 
 ```sh
 cqc src/**/*.js --ignore-path ".gitignore,.eslintignore"
+```
+
+#### Ignore vendors and third-party libraries
+
+```sh
+cqc src/**/*.js --ignore-pattern "src/vendor/**/*.js,src/third-party/**/*.js"
 ```
 
 #### Output json format
@@ -158,6 +158,47 @@ High complexity rate:   0.00%
 Max complexity:         10
 
 Oops, duplicate rate is MORE than threshold 3%, please check the details by adding --verbose option.
+```
+
+## API
+
+It's also able to use cqc as a node module:
+
+```js
+const CodeQualityChecker = require('cqc');
+const codeQualityChecker = new CodeQualityChecker();
+
+// This will return a checkerResult object which include the check result
+const cqcResult = codeQualityChecker.check([
+    'src/**/*.js',
+    'src/**/*.jsx'
+], {
+    ignorePath: '.gitignore,.eslintignore',
+    ignorePattern: 'src/vendor/**/*.js,src/third-party/**/*.js',
+    filterPattern: 'src/path/to/filterPattern',
+
+    jscpdMinLines: 5,
+    jspcdMinTokens: 70,
+    complexityMax: 10,
+
+    disableBase: false,
+    disableSloc: false,
+    disableJscpd: false,
+    disableComplexity: false,
+
+    format: undefined,
+    verbose: true,
+    thresholdJscpd: 3,
+    thresholdComplexity: 10
+});
+
+// Calling report function will console.log result like cli did
+cqcResult.report({
+    format: undefined,
+    verbose: true,
+    thresholdJscpd: 3,
+    thresholdComplexity: 10
+});
 ```
 
 ## Concept Definition
