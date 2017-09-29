@@ -26,11 +26,11 @@ cqc src/**/*.js src/**/*.jsx
 Output:
 
 ```
-Number of files:        9
-Source lines of code:   463
-Duplicate rate:         15.71%
-High complexity rate:   11.11%
-Max complexity:         19
+Number of files:        10
+Source lines of code:   647
+Duplicate rate:         3.46%
+High complexity rate:   0.00%
+Max complexity:         10
 ```
 
 ### Options
@@ -80,16 +80,18 @@ Output:
 
 ```json
 {
-    "numberOfFiles": 9,
+    "base": {
+        "numberOfFiles": 10
+    },
     "sloc": {
-        "source": 463
+        "source": 647
     },
     "jscpd": {
-        "percentage": "15.71"
+        "percentage": "3.46"
     },
     "complexity": {
-        "percentage": "11.11",
-        "max": 19
+        "percentage": "0.00",
+        "max": 10
     }
 }
 ```
@@ -103,44 +105,41 @@ cqc src/**/*.js --verbose
 Output:
 
 ```
-Number of files: 9
+Number of files: 10
 File list:
     - E:\github\xcatliu\cqc\src\BaseChecker\index.js
+    - E:\github\xcatliu\cqc\src\CheckerResult\cqcReporter.js
+    - E:\github\xcatliu\cqc\src\CheckerResult\index.js
     - E:\github\xcatliu\cqc\src\CodeQualityChecker\index.js
     - E:\github\xcatliu\cqc\src\ComplexityChecker\eslintConfig.js
     - E:\github\xcatliu\cqc\src\ComplexityChecker\index.js
     - E:\github\xcatliu\cqc\src\JscpdChecker\getLanguageFromFilepath.js
     - E:\github\xcatliu\cqc\src\JscpdChecker\index.js
-    - E:\github\xcatliu\cqc\src\JscpdChecker\reporter.js
+    - E:\github\xcatliu\cqc\src\JscpdChecker\jscpdReporter.js
     - E:\github\xcatliu\cqc\src\SlocChecker\index.js
-    - E:\github\xcatliu\cqc\src\test.js
 
-Physical lines:             552
-Source lines of code:       463
-Comments:                   23
-Single-line comments:       23
+Physical lines:             800
+Source lines of code:       647
+Comments:                   36
+Single-line comments:       36
 Block comments:             0
 Mixed source and comments:  0
-Empty lines:                66
-TODO's:                     0
+Empty lines:                117
+TODO's:                     1
 
-Duplicate rate:             15.71%
-Files of duplicated code:   1
+Duplicate rate:             3.46%
+Files of duplicated code:   3
 Count of duplicated code:   2
-Lines of duplicated code:   88
+Lines of duplicated code:   28
 Duplication details:
-    - E:\github\xcatliu\cqc\src\test.js: 1-33
-      E:\github\xcatliu\cqc\src\test.js: 4-36
-    - E:\github\xcatliu\cqc\src\test.js: 1-55
-      E:\github\xcatliu\cqc\src\test.js: 40-94
+    - E:\github\xcatliu\cqc\src\CheckerResult\cqcReporter.js: 150-154
+      E:\github\xcatliu\cqc\src\CheckerResult\cqcReporter.js: 156-160
+    - E:\github\xcatliu\cqc\src\JscpdChecker\index.js: 41-63
+      E:\github\xcatliu\cqc\src\JscpdChecker\jscpdReporter.js: 22-44
 
-High complexity rate:       11.11%
-High complexity count:      1
-Max complexity:             19
-Complexity details:
-    - E:\github\xcatliu\cqc\src\test.js:
-        1-38: complexity: 13
-        40-95: complexity: 19
+High complexity rate:       0.00%
+High complexity count:      0
+Max complexity:             10
 ```
 
 #### Set the complexity threshold
@@ -155,7 +154,7 @@ Concept | Definition
 ------- | ----------
 Number of files             | The number of input files
 Source lines of code        | The lines of code except commants and blank lines
-Lines of duplicated code    | Lines of code (more than 5 lines) which is exactly the same between two files, or in different place of one file
+Lines of duplicated code    | Lines of code (more than 5 lines or more than 70 tokens) which is exactly the same between two files, or in different place of one file
 Duplicate rate              | Lines of duplicated code / Source lines of code
 Complexity                  | https://en.wikipedia.org/wiki/Cyclomatic_complexity
 High complexity rate        | The number of files which has complexity more than 10 / Number of files
