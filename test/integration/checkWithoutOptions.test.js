@@ -18,16 +18,16 @@ describe('Check without options', () => {
     describe('one pattern', () => {
         const cqcResult = codeQualityChecker.check('test/sample/**/*.js');
         it('should have correct base check result', () => {
-            assert.equal(cqcResult.numberOfFiles, 4);
-            assert.lengthOf(cqcResult.fileList, 4);
+            assert.equal(cqcResult.base.numberOfFiles, 4);
+            assert.lengthOf(cqcResult.base.fileList, 4);
         });
     });
 });
 
 function baseAssertion(cqcResult) {
     it('should have correct base check result', () => {
-        assert.equal(cqcResult.numberOfFiles, 6);
-        assert.lengthOf(cqcResult.fileList, 6);
+        assert.equal(cqcResult.base.numberOfFiles, 6);
+        assert.lengthOf(cqcResult.base.fileList, 6);
     });
 }
 

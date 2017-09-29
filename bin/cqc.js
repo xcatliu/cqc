@@ -8,7 +8,7 @@ const CodeQualityChecker = require('..');
 program
     .version(pkg.version)
     .usage('[options] <pattern ...>')
-    // Ignore options
+    // Files options
     .option('--ignore-path <path>', 'Specify path of ignore file')
     .option('--ignore-pattern <pattern>', 'Pattern of files to ignore')
     // Script options
@@ -32,6 +32,7 @@ const patterns = program.args;
 const checkOptions = _.pick(program, [
     'ignorePath',
     'ignorePattern',
+    'filterPattern',
 
     'jscpdMinLines',
     'jspcdMinTokens',
@@ -45,7 +46,6 @@ const checkOptions = _.pick(program, [
     'verbose',
     'thresholdJscpd',
     'thresholdComplexity',
-    'filterPattern',
     'cqcReporter'
 ]);
 

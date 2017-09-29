@@ -70,8 +70,8 @@ describe('Check with disable options', () => {
 
 function baseAssertion(cqcResult) {
     it('should have correct base check result', () => {
-        assert.equal(cqcResult.numberOfFiles, 6);
-        assert.lengthOf(cqcResult.fileList, 6);
+        assert.equal(cqcResult.base.numberOfFiles, 6);
+        assert.lengthOf(cqcResult.base.fileList, 6);
     });
 }
 

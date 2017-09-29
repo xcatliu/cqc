@@ -25,7 +25,9 @@ describe('Report with format options', () => {
         cqcResult.report();
 
         this.sinon.assert.calledWith(console.log, `{
-    "numberOfFiles": 6,
+    "base": {
+        "numberOfFiles": 6
+    },
     "sloc": {
         "source": 266
     },

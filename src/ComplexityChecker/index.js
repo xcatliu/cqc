@@ -40,6 +40,19 @@ class ComplexityChecker extends BaseChecker {
             }
         });
 
+        if (this.options.filterPattern) {
+            const filterDetails = result.complexity.details.filter(({ filepath }) => {
+                for (let i = 0; i < this.filterFileList.length; i++) {
+                    if (this.filterFileList[i] === filepath) {
+                        return true;
+                    }
+                }
+                return false;
+            });
+
+            result.complexity.filterDetails = filterDetails;
+        }
+
         return new CheckerResult(result, this.options);
     }
     getEslintResultFromFilepath(filepath) {

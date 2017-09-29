@@ -23,6 +23,7 @@ class BaseChecker {
     constructor(options = {}) {
         this[_baseOptions] = _.merge({}, defaultOptions, options);
     }
+
     check(patterns, options = {}) {
         this.patterns = patterns;
         this.options = _.merge({}, this[_baseOptions], options);
@@ -30,14 +31,22 @@ class BaseChecker {
         this.fileList = this.getFileList();
 
         const result = {
-            numberOfFiles: this.fileList.length,
-            fileList: this.fileList.map((filepath) => {
-                return path.resolve(filepath);
-            })
+            base: {
+                numberOfFiles: this.fileList.length,
+                fileList: this.fileList.map((filepath) => {
+                    return path.resolve(filepath);
+                })
+            }
         };
+
+        if (this.options.filterPattern) {
+            this.filterFileList = this.getFilterFileList();
+            result.base.filterFileList = this.filterFileList;
+        }
 
         return new CheckerResult(result, this.options);
     }
+
     getFileList() {
         const { ignorePath, ignorePattern } = this.options;
 
@@ -61,6 +70,20 @@ class BaseChecker {
             globbyOptions.ignore = ignorePatternList;
         }
         return globby.sync(this.patterns, globbyOptions);
+    }
+
+    getFilterFileList() {
+        let filterPatternList = this.options.filterPattern.split(whiteSpaceOrComma);
+
+        const globbyOptions = {
+            nodir: true
+        };
+
+        let filterFileList = globby.sync(filterPatternList, globbyOptions);
+        filterFileList = filterFileList.map((filepath) => {
+            return path.resolve(filepath);
+        });
+        return filterFileList;
     }
 }
 

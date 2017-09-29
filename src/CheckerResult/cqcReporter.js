@@ -1,9 +1,7 @@
 const _ = require('lodash');
-const globby = require('globby');
 
 const newLine = `
 `;
-const whiteSpaceOrComma = /[\s,]+/;
 
 function cqcReporter(resultObject, options = {}) {
     const {
@@ -37,15 +35,14 @@ function processResult(resultObject, options) {
     const {
         verbose,
         thresholdJscpd,
-        thresholdComplexity,
-        filterPattern
+        thresholdComplexity
     } = options;
 
     if (!verbose) {
         return simplifyResult(resultObject, options);
     }
 
-    const result = _.merge({}, resultObject);
+    let result = _.cloneDeep(resultObject);
     if (result.jscpd && typeof thresholdJscpd !== 'undefined') {
         result.jscpd.threshold = thresholdJscpd;
     }
@@ -53,23 +50,7 @@ function processResult(resultObject, options) {
         result.complexity.threshold = thresholdComplexity;
     }
 
-    if (filterPattern) {
-        const filterFileList = getFilterFileList(filterPattern);
-        console.log(filterFileList);
-    }
-
-
     return result;
-}
-
-function getFilterFileList(filterPattern) {
-    let filterPatternList = filterPattern.split(whiteSpaceOrComma);
-
-    const globbyOptions = {
-        nodir: true
-    };
-
-    return globby.sync(filterPatternList, globbyOptions);
 }
 
 function logJSON(result, { verbose, thresholdJscpd, thresholdComplexity }) {
@@ -91,8 +72,10 @@ function logJSON(result, { verbose, thresholdJscpd, thresholdComplexity }) {
 function simplifyResult(result, { thresholdJscpd, thresholdComplexity }) {
     const simplifiedResult = {};
 
-    if (typeof result.numberOfFiles !== 'undefined') {
-        simplifiedResult.numberOfFiles = result.numberOfFiles;
+    if (result.base) {
+        simplifiedResult.base = {
+            numberOfFiles: result.base.numberOfFiles
+        };
     }
     if (result.sloc) {
         simplifiedResult.sloc = {
@@ -124,12 +107,20 @@ function logVerbose(result) {
     let logArray = [];
 
     // Files
-    if (typeof result.numberOfFiles !== 'undefined') {
-        logArray.push(`Number of files: ${result.numberOfFiles}`);
-        logArray.push('File list:');
-        result.fileList.forEach((filepath) => {
-            logArray.push(`    - ${filepath}`);
-        });
+    if (result.base) {
+        logArray.push(`Number of files: ${result.base.numberOfFiles}`);
+
+        if (result.base.filterFileList) {
+            logArray.push('File list (filtered):');
+            result.base.filterFileList.forEach((filepath) => {
+                logArray.push(`    - ${filepath}`);
+            });
+        } else {
+            logArray.push('File list:');
+            result.base.fileList.forEach((filepath) => {
+                logArray.push(`    - ${filepath}`);
+            });
+        }
     }
 
     // Source lines of code
@@ -154,12 +145,20 @@ function logVerbose(result) {
             logArray.push(`Files of duplicated code:   ${result.jscpd.report.statistics.files}`);
             logArray.push(`Count of duplicated code:   ${result.jscpd.report.statistics.clones}`);
             logArray.push(`Lines of duplicated code:   ${result.jscpd.report.statistics.duplications}`);
-            logArray.push('Duplication details:');
 
-            result.jscpd.report.duplicates.forEach((clone) => {
-                logArray.push(`    - ${clone.firstFile.name}: ${clone.firstFile.start}-${clone.firstFile.start + clone.lines - 1}`);
-                logArray.push(`      ${clone.secondFile.name}: ${clone.secondFile.start}-${clone.secondFile.start + clone.lines - 1}`);
-            });
+            if (result.jscpd.report.filterDuplicates) {
+                logArray.push('Duplication details (filtered):');
+                result.jscpd.report.filterDuplicates.forEach((clone) => {
+                    logArray.push(`    - ${clone.firstFile.name}: ${clone.firstFile.start}-${clone.firstFile.start + clone.lines - 1}`);
+                    logArray.push(`      ${clone.secondFile.name}: ${clone.secondFile.start}-${clone.secondFile.start + clone.lines - 1}`);
+                });
+            } else {
+                logArray.push('Duplication details:');
+                result.jscpd.report.duplicates.forEach((clone) => {
+                    logArray.push(`    - ${clone.firstFile.name}: ${clone.firstFile.start}-${clone.firstFile.start + clone.lines - 1}`);
+                    logArray.push(`      ${clone.secondFile.name}: ${clone.secondFile.start}-${clone.secondFile.start + clone.lines - 1}`);
+                });
+            }
         }
     }
 
@@ -172,14 +171,23 @@ function logVerbose(result) {
         logArray.push(`Max complexity:             ${result.complexity.max}`);
 
         if (result.complexity.percentage !== '0.00') {
-            logArray.push('Complexity details:');
-
-            result.complexity.details.forEach((detail) => {
-                logArray.push(`    - ${detail.filepath}`);
-                detail.details.forEach(({ line, endLine, complexity }) => {
-                    logArray.push(`        ${line}-${endLine}: complexity ${complexity}`);
+            if (result.complexity.filterDetails) {
+                logArray.push('Complexity details (filtered):');
+                result.complexity.filterDetails.forEach((detail) => {
+                    logArray.push(`    - ${detail.filepath}`);
+                    detail.details.forEach(({ line, endLine, complexity }) => {
+                        logArray.push(`        ${line}-${endLine}: complexity ${complexity}`);
+                    });
                 });
-            });
+            } else {
+                logArray.push('Complexity details:');
+                result.complexity.details.forEach((detail) => {
+                    logArray.push(`    - ${detail.filepath}`);
+                    detail.details.forEach(({ line, endLine, complexity }) => {
+                        logArray.push(`        ${line}-${endLine}: complexity ${complexity}`);
+                    });
+                });
+            }
         }
     }
 
@@ -189,8 +197,8 @@ function logVerbose(result) {
 function logSimple(result) {
     let logArray = [];
 
-    if (typeof result.numberOfFiles !== 'undefined') {
-        logArray.push(`Number of files:        ${result.numberOfFiles}`);
+    if (result.base) {
+        logArray.push(`Number of files:        ${result.base.numberOfFiles}`);
     }
     if (result.sloc) {
         logArray.push(`Source lines of code:   ${result.sloc.source}`);

@@ -25,6 +25,6 @@ describe('Report with filterPattern options', () => {
 
         cqcResult.report();
 
-        this.sinon.assert.calledWithMatch(console.log, /^Number of files: 6[\s\S]*45-95: complexity 13$/);
+        this.sinon.assert.calledWithMatch(console.log, /\(filtered\)/);
     });
 });
