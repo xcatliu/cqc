@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "_mocha",
-    "cover": "istanbul cover node_modules/mocha/bin/_mocha"
+    "coveralls": "istanbul cover node_modules/mocha/bin/_mocha"
   },
   "keywords": [
     "quality",
