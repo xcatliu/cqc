@@ -6,7 +6,7 @@ const Linter = require('eslint').Linter;
 
 const BaseChecker = require('../BaseChecker');
 const eslintConfig = require('./eslintConfig');
-const defaultComplexityThreshold = 10;
+const CheckerResult = require('../CheckerResult');
 
 const linter = new Linter();
 
@@ -14,9 +14,7 @@ const COMPLEXITY = /complexity of (\d*)./;
 
 class ComplexityChecker extends BaseChecker {
     check(...args) {
-        const baseResult = super.check(...args);
-
-        this.complexityThreshold = this.getComplexityThreshold();
+        super.check(...args);
 
         let count = 0;
         let max = 0;
@@ -25,32 +23,37 @@ class ComplexityChecker extends BaseChecker {
             return this.getEslintResultFromFilepath(filepath);
         }).filter((eslintResult) => {
             max = Math.max(max, eslintResult.complexity);
-            if (eslintResult.complexity > this.complexityThreshold) {
+            if (eslintResult.complexity > this.options.complexityMax) {
                 count += 1;
                 return true;
             }
             return false;
         });
 
-        let percentage = this.getPercentage(count);
-
-        if (this.options.verbose) {
-            return _.merge({}, baseResult, {
-                complexity: {
-                    percentage,
-                    count,
-                    max,
-                    details
-                }
-            });
-        }
-
-        return _.merge({}, baseResult, {
+        const percentage = this.getPercentage(count);
+        const result = {
             complexity: {
                 percentage,
-                max
+                count,
+                max,
+                details
             }
-        });
+        };
+
+        if (this.options.filterPattern) {
+            const filterDetails = result.complexity.details.filter(({ filepath }) => {
+                for (let i = 0; i < this.filterFileList.length; i++) {
+                    if (this.filterFileList[i] === filepath) {
+                        return true;
+                    }
+                }
+                return false;
+            });
+
+            result.complexity.filterDetails = filterDetails;
+        }
+
+        return new CheckerResult(result, this.options);
     }
     getEslintResultFromFilepath(filepath) {
         const extname = path.extname(filepath).slice(1);
@@ -76,7 +79,7 @@ class ComplexityChecker extends BaseChecker {
             maxComplexity = Math.max(maxComplexity, complexity);
             return _.merge({ complexity }, oneResult);
         }).filter(({ complexity }) => {
-            return complexity > this.complexityThreshold;
+            return complexity > this.options.complexityMax;
         });
 
         return {
@@ -91,12 +94,6 @@ class ComplexityChecker extends BaseChecker {
             return Number(regExpResult[1]);
         }
         return 0;
-    }
-    getComplexityThreshold() {
-        if (this.options.complexityThreshold) {
-            return this.options.complexityThreshold;
-        }
-        return defaultComplexityThreshold;
     }
     getPercentage(count) {
         let result = count / this.fileList.length * 100;

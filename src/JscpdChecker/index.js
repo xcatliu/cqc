@@ -9,37 +9,64 @@ const jscpd = new JsCpd();
 
 const BaseChecker = require('../BaseChecker');
 const getLanguageFromFilepath = require('./getLanguageFromFilepath');
-
-const customRepoterPath = require.resolve('./reporter.js');
+const CheckerResult = require('../CheckerResult');
 
 class JscpdChecker extends BaseChecker {
     check(...args) {
-        const baseResult = super.check(...args);
+        super.check(...args);
 
         const languages = this.getLanguages();
         const jscpdOptions = _.merge({
             languages,
-            reporter: customRepoterPath
+            reporter: 'json'
         }, this.options, {
-            files: this.fileList
+            files: this.fileList,
+            'min-lines': this.options.jscpdMinLines,
+            'min-tokens': this.options.jscpdMinTokens
         });
         const jscpdResult = jscpd.run(jscpdOptions);
 
-        if (this.options.verbose) {
-            return _.merge({}, baseResult, {
-                jscpd: {
-                    percentage: jscpdResult.report.statistics.percentage
-                }
-            }, {
-                jscpd: jscpdResult
-            });
-        }
-
-        return _.merge({}, baseResult, {
+        const result = _.merge({
             jscpd: {
                 percentage: jscpdResult.report.statistics.percentage
             }
+        }, {
+            jscpd: jscpdResult
         });
+
+        if (this.options.filterPattern) {
+            // Get the filterClones
+            const filterClones = result.jscpd.map.clones.filter(({ firstFile, secendFile }) => {
+                for (let i = 0; i < this.filterFileList.length; i++) {
+                    // If the filepath is same, then return true
+                    if (this.filterFileList[i] === firstFile || this.filterFileList[i] === secendFile) {
+                        return true;
+                    }
+                }
+                return false;
+            });
+
+            const filterDuplicates = filterClones.map((clone) => {
+                // Keep the structure same with duplicates property
+                return {
+                    lines: clone.linesCount,
+                    tokens: clone.tokensCount,
+                    firstFile: {
+                        start: clone.firstFileStart,
+                        name: clone.firstFile
+                    },
+                    secondFile: {
+                        start: clone.secondFileStart,
+                        name: clone.secondFile
+                    },
+                    fragment: _.escape(clone.getLines())
+                };
+            });
+
+            result.jscpd.report.filterDuplicates = filterDuplicates;
+        }
+
+        return new CheckerResult(result, this.options);
     }
     getLanguages() {
         const languages = [];

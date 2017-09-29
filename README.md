@@ -1,5 +1,7 @@
 # Code Quality Checker
 
+[![Build Status](https://img.shields.io/travis/xcatliu/cqc.svg)](https://travis-ci.org/xcatliu/cqc) [![npm package](https://img.shields.io/npm/v/cqc.svg)](https://www.npmjs.org/package/cqc) [![npm downloads](http://img.shields.io/npm/dm/cqc.svg)](https://www.npmjs.org/package/cqc) [![Coveralls](https://img.shields.io/coveralls/xcatliu/cqc.svg)](https://coveralls.io/github/xcatliu/cqc)
+
 Check your code quality by running one command.
 
 ## Supported Languages
@@ -35,11 +37,24 @@ Max complexity:         19
 
 Option | Type | Default | Description
 ------ | ---- | ------- | -----------
-`--ignore-pattern` | pattern joined by `,` | | Pattern of files to ignore
-`--ignore-path` | path joined by `,` | | Specify path of ignore file
+Files options |
+`--ignore-path` | path | | Specify path of ignore file
+`--ignore-pattern` | pattern | | Pattern of files to ignore
+`--filter-pattern` | pattern | | Output percentage of all files but only details that related to the filter pattern
+Script options |
+`--jscpd-min-lines` | number | `5` | Set the min size of duplication in code lines
+`--jscpd-min-tokens` | number | `70` | Set the min size of duplication in code tokens
+`--complexity-max` | number | `10` | Set the complexity threshold
+Disable options |
+`--disable-base` | | | Disable base checker
+`--disable-sloc` | | | Disable sloc checker
+`--disable-jscpd` | | | Disable jscpd checker
+`--disable-complexity` | | | Disable complexity checker
+Reporter options |
 `-f`, `--format` | string | | Specify an output format. Supported format: json
 `--verbose` | | | Verbose mode. A lot more information output
-`--complexity-threshold` | number | `10` | Set the complexity threshold
+`--threshold-jscpd` | number | | Set the jscpd threshold
+`--threshold-complexity` | number | | Set the complexity threshold
 
 Examples:
 

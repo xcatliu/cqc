@@ -5,7 +5,7 @@
 const _ = require('lodash');
 const jsonReporter = require('jscpd/lib/reporters/json');
 
-function reporter(options) {
+function jscpdReporter(options) {
     // Pass filterFiles option will enhance the result with an extro property: filterDuplicates
     const filterFiles = options.filterFiles;
     // If no filterFiles is passed, then we just return the origin report with our custom logger
@@ -113,4 +113,4 @@ function getPercentageLog({ percentage, limit }) {
     return `\r\nGood, The duplicate rate is ${percentage}% which is less than ${limit}%\r\n`;
 }
 
-module.exports = reporter;
+module.exports = jscpdReporter;

@@ -4,6 +4,7 @@ const BaseChecker = require('../BaseChecker');
 const SlocChecker = require('../SlocChecker');
 const JscpdChecker = require('../JscpdChecker');
 const ComplexityChecker = require('../ComplexityChecker');
+const CheckerResult = require('../CheckerResult');
 
 class CodeQualityChecker extends BaseChecker {
     constructor(...args) {
@@ -14,11 +15,22 @@ class CodeQualityChecker extends BaseChecker {
     }
     check(...args) {
         const baseResult = super.check(...args);
-        const slocResult = this.slocChecker.check(...args);
-        const jscpdResult = this.jscpdChecker.check(...args);
-        const complexityChecker = this.complexityChecker.check(...args);
 
-        return _.merge({}, baseResult, slocResult, jscpdResult, complexityChecker);
+        const result = {};
+        if (!this.options.disableBase) {
+            _.merge(result, baseResult);
+        }
+        if (!this.options.disableSloc) {
+            _.merge(result, this.slocChecker.check(...args));
+        }
+        if (!this.options.disableJscpd) {
+            _.merge(result, this.jscpdChecker.check(...args));
+        }
+        if (!this.options.disableComplexity) {
+            _.merge(result, this.complexityChecker.check(...args));
+        }
+
+        return new CheckerResult(result, this.options);
     }
 }
 

@@ -1,132 +1,55 @@
 #!/usr/bin/env node
-const fs = require('fs');
-
 const program = require('commander');
+const _ = require('lodash');
 
 const pkg = require('../package.json');
-
 const CodeQualityChecker = require('..');
-const codeQualityChecker = new CodeQualityChecker();
-
-const whiteSpaceOrComma = /[\s,]+/;
 
 program
     .version(pkg.version)
     .usage('[options] <pattern ...>')
-    .option('--ignore-pattern <pattern>', 'Pattern of files to ignore')
+    // Files options
     .option('--ignore-path <path>', 'Specify path of ignore file')
+    .option('--ignore-pattern <pattern>', 'Pattern of files to ignore')
+    .option('--filter-pattern <pattern>', 'Output percentage of all files but only details that related to the filter pattern')
+    // Script options
+    .option('--jscpd-min-lines <number>', 'Set the min size of duplication in code lines, default to 5')
+    .option('--jscpd-min-tokens <number>', 'Set the min size of duplication in code tokens, default to 70')
+    .option('--complexity-max <number>', 'Set the complexity threshold, default to 10')
+    // Disable options
+    .option('--disable-base', 'Disable base checker')
+    .option('--disable-sloc', 'Disable sloc checker')
+    .option('--disable-jscpd', 'Disable jscpd checker')
+    .option('--disable-complexity', 'Disable complexity checker')
+    // Reporter options
     .option('-f, --format <string>', 'Specify an output format. Supported format: json')
-    .option('-v, --verbose', 'Verbose mode. A lot more information output')
-    .option('--complexity-threshold <number>', 'Set the complexity threshold, default to 10')
+    .option('--verbose', 'Verbose mode. A lot more information output')
+    .option('--threshold-jscpd <number>', 'Set the jscpd threshold')
+    .option('--threshold-complexity <number>', 'Set the complexity threshold')
     .parse(process.argv);
 
-let files = program.args;
+const patterns = program.args;
+const checkOptions = _.pick(program, [
+    'ignorePath',
+    'ignorePattern',
+    'filterPattern',
 
-let ignorePattern = [];
-if (program.ignorePath) {
-    const ignorePathList = program.ignorePath.split(whiteSpaceOrComma);
-    ignorePathList.forEach((ignorePath) => {
-        const currentIgnorePattern = fs.readFileSync(ignorePath, 'utf-8').split(whiteSpaceOrComma);
-        ignorePattern = ignorePattern.concat(currentIgnorePattern);
-    });
-}
-if (program.ignorePattern) {
-    const currentIgnorePattern = program.ignorePattern.split(whiteSpaceOrComma);
-    ignorePattern = ignorePattern.concat(currentIgnorePattern);
-}
+    'jscpdMinLines',
+    'jspcdMinTokens',
+    'complexityMax',
 
-const options = {};
+    'disableBase',
+    'disableSloc',
+    'disableJscpd',
+    'disableComplexity',
 
-if (ignorePattern.length > 0) {
-    options.ignore = ignorePattern;
-}
-if (typeof program.verbose === 'boolean') {
-    options.verbose = program.verbose;
-}
-if (typeof program.complexityThreshold === 'string') {
-    options.complexityThreshold = program.complexityThreshold;
-}
+    'format',
+    'verbose',
+    'thresholdJscpd',
+    'thresholdComplexity'
+]);
 
-const cqcResult = codeQualityChecker.check(files, options);
-
-if (program.format === 'json') {
-    console.log(JSON.stringify(cqcResult, null, 4));
-    process.exit(0);
-    return;
-}
-
-let stdout;
-
-/* eslint-disable indent */
-if (!options.verbose) {
-
-stdout = `
-Number of files:        ${cqcResult.numberOfFiles}
-Source lines of code:   ${cqcResult.sloc.source}
-Duplicate rate:         ${cqcResult.jscpd.percentage}%
-High complexity rate:   ${cqcResult.complexity.percentage}%
-Max complexity:         ${cqcResult.complexity.max}
-`;
-
-} else {
-
-// Files
-stdout = `
-Number of files: ${cqcResult.numberOfFiles}
-File list:
-${cqcResult.fileList.map((filepath) => `    - ${filepath}`).join('\r\n')}
-`;
-
-// Source lines of code
-stdout += `
-Physical lines:             ${cqcResult.sloc.total}
-Source lines of code:       ${cqcResult.sloc.source}
-Comments:                   ${cqcResult.sloc.comment}
-Single-line comments:       ${cqcResult.sloc.single}
-Block comments:             ${cqcResult.sloc.block}
-Mixed source and comments:  ${cqcResult.sloc.mixed}
-Empty lines:                ${cqcResult.sloc.empty}
-TODO's:                     ${cqcResult.sloc.todo}
-`;
-
-// Duplicate code
-stdout += `
-Duplicate rate:             ${cqcResult.jscpd.percentage}%
-`;
-
-    if (cqcResult.jscpd.percentage !== '0.00') {
-
-stdout += `Files of duplicated code:   ${cqcResult.jscpd.report.statistics.files}
-Count of duplicated code:   ${cqcResult.jscpd.report.statistics.clones}
-Lines of duplicated code:   ${cqcResult.jscpd.report.statistics.duplications}
-Duplication details:
-${cqcResult.jscpd.report.duplicates.map((clone) => {
-    return `    - ${clone.firstFile.name}: ${clone.firstFile.start}-${clone.firstFile.start + clone.lines - 1}
-      ${clone.secondFile.name}: ${clone.secondFile.start}-${clone.secondFile.start + clone.lines - 1}`;
-}).join('\r\n')}
-`;
-
-    }
-
-// Complexity
-stdout += `
-High complexity rate:       ${cqcResult.complexity.percentage}%
-High complexity count:      ${cqcResult.complexity.count}
-Max complexity:             ${cqcResult.complexity.max}
-`;
-
-    if (cqcResult.complexity.percentage !== '0.00') {
-
-stdout += `Complexity details:
-${cqcResult.complexity.details.map((detail) => {
-    return `    - ${detail.filepath}:
-${detail.details.map(({ line, endLine, complexity }) => `        ${line}-${endLine}: complexity: ${complexity}`).join('\r\n')}`;
-}).join('\r\n')}
-`;
-
-    }
-
-}
-/* eslint-enable indent */
-
-console.log(stdout);
+const codeQualityChecker = new CodeQualityChecker();
+codeQualityChecker
+    .check(patterns, checkOptions)
+    .report();
