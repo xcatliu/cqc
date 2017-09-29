@@ -4,6 +4,21 @@ const CodeQualityChecker = require('../../');
 const codeQualityChecker = new CodeQualityChecker();
 
 describe('Check with disable options', () => {
+    describe('disableBase', () => {
+        const cqcResult = codeQualityChecker.check([
+            'test/sample/**/*.js',
+            'test/sample/**/*.jsx'
+        ], {
+            disableBase: true
+        });
+        it('should not have base check result', () => {
+            assert.isUndefined(cqcResult.base);
+        });
+        slocAssertion(cqcResult);
+        jscpdAssertion(cqcResult);
+        complexityAssertion(cqcResult);
+    });
+
     describe('disableSloc', () => {
         const cqcResult = codeQualityChecker.check([
             'test/sample/**/*.js',

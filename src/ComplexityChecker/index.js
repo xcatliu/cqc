@@ -14,7 +14,7 @@ const COMPLEXITY = /complexity of (\d*)./;
 
 class ComplexityChecker extends BaseChecker {
     check(...args) {
-        const baseResult = super.check(...args);
+        super.check(...args);
 
         let count = 0;
         let max = 0;
@@ -31,14 +31,14 @@ class ComplexityChecker extends BaseChecker {
         });
 
         const percentage = this.getPercentage(count);
-        const result = _.merge({}, baseResult, {
+        const result = {
             complexity: {
                 percentage,
                 count,
                 max,
                 details
             }
-        });
+        };
 
         if (this.options.filterPattern) {
             const filterDetails = result.complexity.details.filter(({ filepath }) => {

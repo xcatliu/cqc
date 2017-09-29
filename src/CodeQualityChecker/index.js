@@ -16,7 +16,10 @@ class CodeQualityChecker extends BaseChecker {
     check(...args) {
         const baseResult = super.check(...args);
 
-        const result = _.merge({}, baseResult);
+        const result = {};
+        if (!this.options.disableBase) {
+            _.merge(result, baseResult);
+        }
         if (!this.options.disableSloc) {
             _.merge(result, this.slocChecker.check(...args));
         }

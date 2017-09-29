@@ -13,7 +13,7 @@ const CheckerResult = require('../CheckerResult');
 
 class JscpdChecker extends BaseChecker {
     check(...args) {
-        const baseResult = super.check(...args);
+        super.check(...args);
 
         const languages = this.getLanguages();
         const jscpdOptions = _.merge({
@@ -26,7 +26,7 @@ class JscpdChecker extends BaseChecker {
         });
         const jscpdResult = jscpd.run(jscpdOptions);
 
-        const result = _.merge({}, baseResult, {
+        const result = _.merge({
             jscpd: {
                 percentage: jscpdResult.report.statistics.percentage
             }

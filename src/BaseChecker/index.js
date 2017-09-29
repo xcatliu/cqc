@@ -5,14 +5,12 @@ const _ = require('lodash');
 const globby = require('globby');
 
 const CheckerResult = require('../CheckerResult');
-const defaultCqcReporter = require('../CheckerResult/cqcReporter');
 
 const whiteSpaceOrComma = /[\s,]+/;
 const defaultOptions = {
     jscpdMinLines: 5,
     jscpdMinTokens: 70,
-    complexityMax: 10,
-    cqcReporter: defaultCqcReporter
+    complexityMax: 10
 };
 
 // Use Symbol to create private variables

@@ -1,5 +1,7 @@
 const _ = require('lodash');
 
+const cqcReporter = require('./cqcReporter');
+
 // Use Symbol to create private variables
 // https://curiosity-driven.org/private-properties-in-javascript
 const _baseOptions = Symbol('baseOptions');
@@ -15,7 +17,7 @@ class CheckerResult {
     report(options = {}) {
         const reporterOptions = _.merge({}, this[_baseOptions], options);
 
-        reporterOptions.cqcReporter(this, reporterOptions);
+        cqcReporter(this, reporterOptions);
     }
 }
 
