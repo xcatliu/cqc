@@ -46,7 +46,13 @@ class SlocChecker extends BaseChecker {
         return new CheckerResult(result, this.options);
     }
     getSlocTypeFromFilepath(filepath) {
-        return path.extname(filepath).slice(1);
+        const extname = path.extname(filepath).slice(1);
+
+        if (extname === 'vue') {
+            return 'js';
+        }
+
+        return extname;
     }
 }
 

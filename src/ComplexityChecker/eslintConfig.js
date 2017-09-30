@@ -1,6 +1,9 @@
 module.exports = {
-    parser: 'babel-eslint',
+    extends: [
+        'plugin:vue/base'
+    ],
     parserOptions: {
+        parser: 'babel-eslint',
         ecmaVersion: 2017,
         sourceType: 'module',
         ecmaFeatures: {
@@ -15,6 +18,9 @@ module.exports = {
         commonjs: true,
         es6: true
     },
+    plugins: [
+        'vue'
+    ],
     rules: {
         complexity: [
             'error',

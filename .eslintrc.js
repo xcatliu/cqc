@@ -1,6 +1,10 @@
 module.exports = {
     extends: [
-        'eslint-config-alloy',
+        'eslint-config-alloy'
+    ],
+    plugins: [
+        'react',
+        'vue'
     ],
     globals: {
         // 这里填入你的项目需要的全局变量

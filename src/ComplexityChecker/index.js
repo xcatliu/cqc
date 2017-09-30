@@ -58,7 +58,7 @@ class ComplexityChecker extends BaseChecker {
     getEslintResultFromFilepath(filepath) {
         const extname = path.extname(filepath).slice(1);
         const resolvedFilepath = path.resolve(filepath);
-        if (extname !== 'js' && extname !== 'jsx') {
+        if (extname !== 'js' && extname !== 'jsx' && extname !== 'vue') {
             return {
                 filepath: resolvedFilepath,
                 complexity: 0,
@@ -71,7 +71,8 @@ class ComplexityChecker extends BaseChecker {
             filename: resolvedFilepath,
             allowInlineConfig: false
         });
-
+        console.log(eslintResult);
+        
         let maxComplexity = 0;
         const eslintResultWithComplexity = eslintResult.map((oneResult) => {
             const { message } = oneResult;
