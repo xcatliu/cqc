@@ -49,7 +49,7 @@ class SlocChecker extends BaseChecker {
         const extname = path.extname(filepath).slice(1);
 
         if (extname === 'vue') {
-            return 'js';
+            return 'html';
         }
 
         return extname;
