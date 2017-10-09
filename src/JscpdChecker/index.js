@@ -18,7 +18,8 @@ class JscpdChecker extends BaseChecker {
         const languages = this.getLanguages();
         const jscpdOptions = _.merge({
             languages,
-            reporter: 'json'
+            reporter: 'json',
+            limit: 100
         }, this.options, {
             files: this.fileList,
             'min-lines': this.options.jscpdMinLines,

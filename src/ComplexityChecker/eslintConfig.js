@@ -15,6 +15,10 @@ module.exports = {
         commonjs: true,
         es6: true
     },
+    plugins: [
+        'react',
+        'vue'
+    ],
     rules: {
         complexity: [
             'error',

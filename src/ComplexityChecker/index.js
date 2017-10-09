@@ -3,7 +3,9 @@ const path = require('path');
 
 const _ = require('lodash');
 const Linter = require('eslint').Linter;
+const SourceCode = require('eslint').SourceCode;
 
+const getParserFromFilepath = require('./getParserFromFilepath');
 const BaseChecker = require('../BaseChecker');
 const eslintConfig = require('./eslintConfig');
 const CheckerResult = require('../CheckerResult');
@@ -58,7 +60,7 @@ class ComplexityChecker extends BaseChecker {
     getEslintResultFromFilepath(filepath) {
         const extname = path.extname(filepath).slice(1);
         const resolvedFilepath = path.resolve(filepath);
-        if (extname !== 'js' && extname !== 'jsx') {
+        if (extname !== 'js' && extname !== 'jsx' && extname !== 'vue') {
             return {
                 filepath: resolvedFilepath,
                 complexity: 0,
@@ -67,7 +69,10 @@ class ComplexityChecker extends BaseChecker {
         }
 
         const fileContent = fs.readFileSync(filepath, 'utf-8');
-        const eslintResult = linter.verify(fileContent, eslintConfig, {
+        const parser = getParserFromFilepath(filepath);
+        const ast = parser.parse(fileContent, eslintConfig.parserOptions);
+        const code = new SourceCode(fileContent, ast);
+        const eslintResult = linter.verify(code, eslintConfig, {
             filename: resolvedFilepath,
             allowInlineConfig: false
         });

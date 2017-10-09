@@ -22,6 +22,44 @@ describe('Check without options', () => {
             assert.lengthOf(cqcResult.base.fileList, 4);
         });
     });
+
+    describe('vue file', () => {
+        const cqcResult = codeQualityChecker.check([
+            'test/sample/**/*.vue'
+        ]);
+        it('should have correct result', () => {
+            assert.equal(cqcResult.base.numberOfFiles, 1);
+            assert.deepEqual(cqcResult.sloc, {
+                total: 75,
+                source: 73,
+                comment: 0,
+                single: 0,
+                block: 0,
+                mixed: 0,
+                empty: 2,
+                todo: 0
+            });
+            assert.equal(cqcResult.jscpd.percentage, '68.42');
+            assert.equal(cqcResult.complexity.percentage, '100.00');
+            assert.equal(cqcResult.complexity.count, 1);
+            assert.equal(cqcResult.complexity.max, 13);
+            assert.lengthOf(cqcResult.complexity.details, 1);
+            assert.equal(cqcResult.complexity.details[0].complexity, 13);
+            assert.lengthOf(cqcResult.complexity.details[0].details, 1);
+            assert.deepEqual(cqcResult.complexity.details[0].details[0], {
+                complexity: 13,
+                ruleId: 'complexity',
+                severity: 2,
+                message: 'Method \'data\' has a complexity of 13.',
+                line: 26,
+                column: 11,
+                nodeType: 'FunctionExpression',
+                source: '    data: function () {',
+                endLine: 66,
+                endColumn: 6
+            });
+        });
+    });
 });
 
 function baseAssertion(cqcResult) {

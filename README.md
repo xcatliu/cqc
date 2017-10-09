@@ -6,7 +6,7 @@ Check your code quality by running one command.
 
 ## Supported Languages
 
-- js, jsx
+- js, jsx, vue
 - css, less, scss, sass, styl
 
 ## Getting Started
