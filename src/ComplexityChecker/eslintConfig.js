@@ -1,9 +1,6 @@
 module.exports = {
-    extends: [
-        'plugin:vue/base'
-    ],
+    parser: 'babel-eslint',
     parserOptions: {
-        parser: 'babel-eslint',
         ecmaVersion: 2017,
         sourceType: 'module',
         ecmaFeatures: {
@@ -19,6 +16,7 @@ module.exports = {
         es6: true
     },
     plugins: [
+        'react',
         'vue'
     ],
     rules: {

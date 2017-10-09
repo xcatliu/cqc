@@ -3,7 +3,9 @@ const path = require('path');
 
 const _ = require('lodash');
 const Linter = require('eslint').Linter;
+const SourceCode = require('eslint').SourceCode;
 
+const getParserFromFilepath = require('./getParserFromFilepath');
 const BaseChecker = require('../BaseChecker');
 const eslintConfig = require('./eslintConfig');
 const CheckerResult = require('../CheckerResult');
@@ -67,12 +69,14 @@ class ComplexityChecker extends BaseChecker {
         }
 
         const fileContent = fs.readFileSync(filepath, 'utf-8');
-        const eslintResult = linter.verify(fileContent, eslintConfig, {
+        const parser = getParserFromFilepath(filepath);
+        const ast = parser.parse(fileContent, eslintConfig.parserOptions);
+        const code = new SourceCode(fileContent, ast);
+        const eslintResult = linter.verify(code, eslintConfig, {
             filename: resolvedFilepath,
             allowInlineConfig: false
         });
-        console.log(eslintResult);
-        
+
         let maxComplexity = 0;
         const eslintResultWithComplexity = eslintResult.map((oneResult) => {
             const { message } = oneResult;
