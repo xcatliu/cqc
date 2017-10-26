@@ -23,7 +23,7 @@ module.exports = {
         complexity: [
             'error',
             {
-                max: 1
+                max: 0
             }
         ]
     }
