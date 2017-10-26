@@ -212,6 +212,7 @@ const cqcResult = codeQualityChecker.check([
     'src/**/*.js',
     'src/**/*.jsx'
 ], {
+    ext: '.js',
     ignorePath: '.gitignore,.eslintignore',
     ignorePattern: 'src/vendor/**/*.js,src/third-party/**/*.js',
     filterPattern: 'src/path/to/filterPattern',
