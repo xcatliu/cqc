@@ -4,6 +4,16 @@ const CodeQualityChecker = require('../../');
 const codeQualityChecker = new CodeQualityChecker();
 
 describe('Check with files options', () => {
+    describe('ext', () => {
+        const cqcResult = codeQualityChecker.check('test/sample', {
+            ext: '.js,.jsx'
+        });
+        it('should have correct base check result', () => {
+            assert.equal(cqcResult.base.numberOfFiles, 6);
+            assert.lengthOf(cqcResult.base.fileList, 6);
+        });
+    });
+
     describe('ignorePath', () => {
         const cqcResult = codeQualityChecker.check([
             'test/sample/**/*.js',

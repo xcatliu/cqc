@@ -8,6 +8,7 @@ const CheckerResult = require('../CheckerResult');
 
 const whiteSpaceOrComma = /[\s,]+/;
 const defaultOptions = {
+    ext: '.js',
     jscpdMinLines: 5,
     jscpdMinTokens: 70,
     complexityMax: 10
@@ -23,7 +24,11 @@ class BaseChecker {
     }
 
     check(patterns, options = {}) {
-        this.patterns = patterns;
+        if (Array.isArray(patterns)) {
+            this.patterns = patterns;
+        } else {
+            this.patterns = [patterns];
+        }
         this.options = _.merge({}, this[_baseOptions], options);
 
         this.fileList = this.getFileList();
@@ -46,7 +51,7 @@ class BaseChecker {
     }
 
     getFileList() {
-        const { ignorePath, ignorePattern } = this.options;
+        const { ext, ignorePath, ignorePattern } = this.options;
 
         let ignorePatternList = [];
         if (ignorePath) {
@@ -67,7 +72,26 @@ class BaseChecker {
         if (ignorePatternList.length > 0) {
             globbyOptions.ignore = ignorePatternList;
         }
-        return globby.sync(this.patterns, globbyOptions);
+
+        const extList = ext.split(whiteSpaceOrComma);
+
+        const globbyPatterns = this.patterns.reduce((prev, pattern) => {
+            try {
+                if (fs.lstatSync(pattern).isDirectory()) {
+                    return prev.concat(extList.map((oneExt) => {
+                        return pattern + '/**/*' + oneExt;
+                    }));
+                }
+            } catch (e) {
+                if (e.code === 'ENOENT') {
+                    return prev.concat(pattern);
+                } else {
+                    throw e;
+                }
+            }
+            return prev.concat(pattern);
+        }, []);
+        return globby.sync(globbyPatterns, globbyOptions);
     }
 
     getFilterFileList() {

@@ -7,8 +7,9 @@ const CodeQualityChecker = require('..');
 
 program
     .version(pkg.version)
-    .usage('[options] <pattern ...>')
+    .usage('[options] <file|dir|glob>*')
     // Files options
+    .option('--ext <string>', 'Specify file extensions, default to .js')
     .option('--ignore-path <path>', 'Specify path of ignore file')
     .option('--ignore-pattern <pattern>', 'Pattern of files to ignore')
     .option('--filter-pattern <pattern>', 'Output percentage of all files but only details that related to the filter pattern')
@@ -30,6 +31,7 @@ program
 
 const patterns = program.args;
 const checkOptions = _.pick(program, [
+    'ext',
     'ignorePath',
     'ignorePattern',
     'filterPattern',

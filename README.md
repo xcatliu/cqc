@@ -9,18 +9,18 @@ Check your code quality by running one command.
 - js, jsx, vue
 - css, less, scss, sass, styl
 
-## Getting Started
+## Quick Start
 
-### Installation
+Install cqc:
 
-```sh
+```shell
 npm install -g cqc
 ```
 
-### Usage
+Run code quality check for all JavaScript files in `src` directory:
 
-```sh
-cqc src/**/*.js src/**/*.jsx
+```shell
+cqc src
 ```
 
 Output:
@@ -33,11 +33,36 @@ High complexity rate:   0.00%
 Max complexity:         10
 ```
 
+## Usage
+
+To run cqc, use the following format:
+
+```shell
+cqc [options] <file|dir|glob>*
+```
+
+For example:
+
+```shell
+cqc src/file1.js src/file2.js
+# or
+cqc src lib
+# or
+cqc src/**/*.js src/**/*.jsx
+```
+
+Please note that when passing a glob as a parameter, it will be expanded by your shell. The results of the expansion can vary depending on your shell, and its configuration. If you want to use node `glob` syntax, you have to quote your parameter (using double quotes if you need it to run in Windows), as follows:
+
+```shell
+cqc "src/**/*.js" "src/**/*.jsx"
+```
+
 ### Options
 
 Option | Type | Default | Description
 ------ | ---- | ------- | -----------
 Files options |
+`--ext` | string | `.js` | Specify file extensions
 `--ignore-path` | path | | Specify path of ignore file
 `--ignore-pattern` | pattern | | Pattern of files to ignore
 `--filter-pattern` | pattern | | Output percentage of all files but only details that related to the filter pattern
@@ -58,21 +83,27 @@ Reporter options |
 
 Examples:
 
+#### Set the file extensions
+
+```shell
+cqc src --ext ".js,.jsx"
+```
+
 #### Set the ignore file path
 
-```sh
+```shell
 cqc src/**/*.js --ignore-path ".gitignore,.eslintignore"
 ```
 
 #### Ignore vendors and third-party libraries
 
-```sh
+```shell
 cqc src/**/*.js --ignore-pattern "src/vendor/**/*.js,src/third-party/**/*.js"
 ```
 
 #### Output json format
 
-```sh
+```shell
 cqc src/**/*.js --format json
 ```
 
@@ -98,7 +129,7 @@ Output:
 
 #### Verbose mode
 
-```sh
+```shell
 cqc src/**/*.js --verbose
 ```
 
@@ -144,7 +175,7 @@ Max complexity:             10
 
 #### Set the jscpd threshold
 
-```sh
+```shell
 cqc src/**/*.js --threshold-jscpd 3
 ```
 
@@ -212,13 +243,3 @@ Duplicate rate              | Lines of duplicated code / Source lines of code
 Complexity                  | https://en.wikipedia.org/wiki/Cyclomatic_complexity
 High complexity rate        | The number of files which has complexity more than 10 / Number of files
 Max complexity              | The highest complexity of all input files
-
-## Troubleshootings
-
-### Why `cqc src/**/*.js` only identify the files under two-level dir?
-
-Some shell has different behavior between others. Please try to wrap the pattern by quotes:
-
-```sh
-cqc "src/**/*.js"
-```

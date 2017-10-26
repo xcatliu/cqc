@@ -23,6 +23,14 @@ describe('Check without options', () => {
         });
     });
 
+    describe('dir input', () => {
+        const cqcResult = codeQualityChecker.check('test/sample');
+        it('should have correct base check result', () => {
+            assert.equal(cqcResult.base.numberOfFiles, 4);
+            assert.lengthOf(cqcResult.base.fileList, 4);
+        });
+    });
+
     describe('vue file', () => {
         const cqcResult = codeQualityChecker.check([
             'test/sample/**/*.vue'
