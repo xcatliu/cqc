@@ -13,13 +13,13 @@ Check your code quality by running one command.
 
 Install cqc:
 
-```shell
+```bash
 npm install -g cqc
 ```
 
-Run code quality check for all JavaScript files in `src` directory:
+Run Code Quality Checker for all JavaScript files in `src` directory:
 
-```shell
+```bash
 cqc src
 ```
 
@@ -37,23 +37,31 @@ Max complexity:         10
 
 To run cqc, use the following format:
 
-```shell
+```bash
 cqc [options] <file|dir|glob>*
 ```
 
 For example:
 
-```shell
+```bash
 cqc src/file1.js src/file2.js
-# or
+```
+
+or
+
+```bash
 cqc src lib
-# or
+```
+
+or
+
+```bash
 cqc src/**/*.js src/**/*.jsx
 ```
 
 Please note that when passing a glob as a parameter, it will be expanded by your shell. The results of the expansion can vary depending on your shell, and its configuration. If you want to use node `glob` syntax, you have to quote your parameter (using double quotes if you need it to run in Windows), as follows:
 
-```shell
+```bash
 cqc "src/**/*.js" "src/**/*.jsx"
 ```
 
@@ -85,25 +93,25 @@ Examples:
 
 #### Set the file extensions
 
-```shell
+```bash
 cqc src --ext ".js,.jsx"
 ```
 
 #### Set the ignore file path
 
-```shell
+```bash
 cqc src/**/*.js --ignore-path ".gitignore,.eslintignore"
 ```
 
 #### Ignore vendors and third-party libraries
 
-```shell
+```bash
 cqc src/**/*.js --ignore-pattern "src/vendor/**/*.js,src/third-party/**/*.js"
 ```
 
 #### Output json format
 
-```shell
+```bash
 cqc src/**/*.js --format json
 ```
 
@@ -129,7 +137,7 @@ Output:
 
 #### Verbose mode
 
-```shell
+```bash
 cqc src/**/*.js --verbose
 ```
 
@@ -175,7 +183,7 @@ Max complexity:             10
 
 #### Set the jscpd threshold
 
-```shell
+```bash
 cqc src/**/*.js --threshold-jscpd 3
 ```
 
