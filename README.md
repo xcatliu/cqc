@@ -70,7 +70,7 @@ cqc "src/**/*.js" "src/**/*.jsx"
 Option | Type | Default | Description
 ------ | ---- | ------- | -----------
 Files options |
-`--ext` | string | `.js` | Specify file extensions
+`--ext` | string | `.js` | Specify file extensions. `--ext` is only used when the arguments are directories. If you use glob patterns or file names, then `--ext` is ignored.
 `--ignore-path` | path | | Specify path of ignore file
 `--ignore-pattern` | pattern | | Pattern of files to ignore
 `--filter-pattern` | pattern | | Output percentage of all files but only details that related to the filter pattern
