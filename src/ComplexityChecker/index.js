@@ -34,7 +34,10 @@ class ComplexityChecker extends BaseChecker {
             return false;
         });
 
-        let percentage = numberOfHighComplexityFunctions / numberOfFunctions * 100;
+        let percentage = 0;
+        if (numberOfFunctions > 0) {
+            percentage = numberOfHighComplexityFunctions / numberOfFunctions * 100;
+        }
         percentage = percentage.toFixed(2);
 
         const result = {
