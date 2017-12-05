@@ -84,8 +84,8 @@ function logVerbose(result) {
         logArray.push('');
         logArray.push();
         logArray.push(`High complexity rate:                ${result.complexity.percentage}%`);
-        logArray.push(`Number of high complexity functions: ${result.complexity.numberOfHighComplexityFunctions}`);
         logArray.push(`Number of functions:                 ${result.complexity.numberOfFunctions}`);
+        logArray.push(`Number of high complexity functions: ${result.complexity.numberOfHighComplexityFunctions}`);
 
         if (result.complexity.percentage !== '0.00') {
             if (result.complexity.filterDetails) {
