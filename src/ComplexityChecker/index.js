@@ -40,7 +40,6 @@ class ComplexityChecker extends BaseChecker {
         const result = {
             complexity: {
                 percentage,
-                max,
                 details,
                 numberOfFunctions,
                 numberOfHighComplexityFunctions

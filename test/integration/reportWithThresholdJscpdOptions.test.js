@@ -28,8 +28,7 @@ describe('Report with thresholdJscpd options', () => {
             this.sinon.assert.calledWithMatch(console.log, `Number of files:        6
 Source lines of code:   266
 Duplicate rate:         21.21%
-High complexity rate:   33.33%
-Max complexity:         16`);
+High complexity rate:   17.65%`);
             this.sinon.assert.calledWithMatch(console.log, 'Good, duplicate rate is LESS than threshold 22%');
         });
     });
@@ -51,8 +50,7 @@ Max complexity:         16`);
             this.sinon.assert.calledWithMatch(console.log, `Number of files:        6
 Source lines of code:   266
 Duplicate rate:         21.21%
-High complexity rate:   33.33%
-Max complexity:         16`);
+High complexity rate:   17.65%`);
             this.sinon.assert.calledWithMatch(console.error, 'Oops, duplicate rate is MORE than threshold 20%, please check the details by adding --verbose option.');
             this.sinon.assert.calledWith(process.exit, 1);
         });

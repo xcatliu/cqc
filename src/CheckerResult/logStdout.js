@@ -83,9 +83,9 @@ function logVerbose(result) {
     if (result.complexity) {
         logArray.push('');
         logArray.push();
-        logArray.push(`High complexity rate:       ${result.complexity.percentage}%`);
-        logArray.push(`High complexity count:      ${result.complexity.count}`);
-        logArray.push(`Max complexity:             ${result.complexity.max}`);
+        logArray.push(`High complexity rate:                ${result.complexity.percentage}%`);
+        logArray.push(`Number of high complexity functions: ${result.complexity.numberOfHighComplexityFunctions}`);
+        logArray.push(`Number of functions:                 ${result.complexity.numberOfFunctions}`);
 
         if (result.complexity.percentage !== '0.00') {
             if (result.complexity.filterDetails) {
@@ -125,7 +125,6 @@ function logSimple(result) {
     }
     if (result.complexity) {
         logArray.push(`High complexity rate:   ${result.complexity.percentage}%`);
-        logArray.push(`Max complexity:         ${result.complexity.max}`);
     }
 
     console.log(logArray.join(newLine));

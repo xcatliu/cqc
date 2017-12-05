@@ -25,8 +25,7 @@ describe('Report with disable options', () => {
 
             this.sinon.assert.calledWith(console.log, `Number of files:        6
 Duplicate rate:         21.21%
-High complexity rate:   33.33%
-Max complexity:         16`);
+High complexity rate:   17.65%`);
         });
     });
 });

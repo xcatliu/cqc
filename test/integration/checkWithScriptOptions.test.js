@@ -36,7 +36,7 @@ describe('Check with script options', () => {
             complexityMax: 15
         });
         it('should have correct complexity check result', () => {
-            assert.equal(cqcResult.complexity.percentage, '16.67');
+            assert.equal(cqcResult.complexity.percentage, '5.88');
         });
     });
 });
