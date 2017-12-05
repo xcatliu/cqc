@@ -71,7 +71,9 @@ class ComplexityChecker extends BaseChecker {
             return {
                 filepath: resolvedFilepath,
                 complexity: 0,
-                details: []
+                details: [],
+                numberOfFunctions: 0,
+                numberOfHighComplexityFunctions: 0
             };
         }
 
@@ -108,14 +110,6 @@ class ComplexityChecker extends BaseChecker {
             return Number(regExpResult[1]);
         }
         return 0;
-    }
-    getPercentage(count) {
-        let result = 0;
-        if (this.fileList.length > 0) {
-            result = count / this.fileList.length * 100;
-        }
-        result = result.toFixed(2);
-        return result;
     }
 }
 
