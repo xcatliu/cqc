@@ -107,7 +107,10 @@ class ComplexityChecker extends BaseChecker {
         return 0;
     }
     getPercentage(count) {
-        let result = count / this.fileList.length * 100;
+        let result = 0;
+        if (this.fileList.length > 0) {
+            result = count / this.fileList.length * 100;
+        }
         result = result.toFixed(2);
         return result;
     }

@@ -1,6 +1,6 @@
 {
   "name": "cqc",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Code Quality Checker - Check your code quality by running one command.",
   "main": "src/CodeQualityChecker/index.js",
   "bin": {
