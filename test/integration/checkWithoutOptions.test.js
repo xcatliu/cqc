@@ -49,8 +49,8 @@ describe('Check without options', () => {
             });
             assert.equal(cqcResult.jscpd.percentage, '68.42');
             assert.equal(cqcResult.complexity.percentage, '100.00');
-            assert.equal(cqcResult.complexity.count, 1);
-            assert.equal(cqcResult.complexity.max, 13);
+            assert.equal(cqcResult.complexity.numberOfFunctions, 1);
+            assert.equal(cqcResult.complexity.numberOfHighComplexityFunctions, 1);
             assert.lengthOf(cqcResult.complexity.details, 1);
             assert.equal(cqcResult.complexity.details[0].complexity, 13);
             assert.lengthOf(cqcResult.complexity.details[0].details, 1);
@@ -113,9 +113,9 @@ function jscpdAssertion(cqcResult) {
 
 function complexityAssertion(cqcResult) {
     it('should have correct complexity check result', () => {
-        assert.equal(cqcResult.complexity.percentage, '33.33');
-        assert.equal(cqcResult.complexity.count, 2);
-        assert.equal(cqcResult.complexity.max, 16);
+        assert.equal(cqcResult.complexity.percentage, '17.65');
+        assert.equal(cqcResult.complexity.numberOfFunctions, 17);
+        assert.equal(cqcResult.complexity.numberOfHighComplexityFunctions, 3);
         assert.lengthOf(cqcResult.complexity.details, 2);
         assert.equal(cqcResult.complexity.details[0].complexity, 16);
         assert.equal(cqcResult.complexity.details[1].complexity, 13);

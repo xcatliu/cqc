@@ -18,7 +18,7 @@ describe('Report with thresholdComplexity options', () => {
             'test/sample/**/*.js',
             'test/sample/**/*.jsx'
         ], {
-            thresholdComplexity: 35
+            thresholdComplexity: 20
         });
         it('Should match provided console.log result', function () {
             this.sinon.spy(console, 'log');
@@ -28,9 +28,8 @@ describe('Report with thresholdComplexity options', () => {
             this.sinon.assert.calledWithMatch(console.log, `Number of files:        6
 Source lines of code:   266
 Duplicate rate:         21.21%
-High complexity rate:   33.33%
-Max complexity:         16`);
-            this.sinon.assert.calledWithMatch(console.log, 'Good, high complexity rate is LESS than threshold 35%');
+High complexity rate:   17.65%`);
+            this.sinon.assert.calledWithMatch(console.log, 'Good, high complexity rate is LESS than threshold 20%');
         });
     });
 
@@ -39,7 +38,7 @@ Max complexity:         16`);
             'test/sample/**/*.js',
             'test/sample/**/*.jsx'
         ], {
-            thresholdComplexity: 30
+            thresholdComplexity: 15
         });
         it('Should match provided log result and exit 1', function () {
             this.sinon.spy(console, 'log');
@@ -51,9 +50,8 @@ Max complexity:         16`);
             this.sinon.assert.calledWithMatch(console.log, `Number of files:        6
 Source lines of code:   266
 Duplicate rate:         21.21%
-High complexity rate:   33.33%
-Max complexity:         16`);
-            this.sinon.assert.calledWithMatch(console.error, 'Oops, high complexity rate is MORE than threshold 30%, please check the details by adding --verbose option.');
+High complexity rate:   17.65%`);
+            this.sinon.assert.calledWithMatch(console.error, 'Oops, high complexity rate is MORE than threshold 15%, please check the details by adding --verbose option.');
             this.sinon.assert.calledWith(process.exit, 1);
         });
     });
@@ -63,7 +61,7 @@ Max complexity:         16`);
             'test/sample/**/*.js',
             'test/sample/**/*.jsx'
         ], {
-            thresholdComplexity: 30,
+            thresholdComplexity: 15,
             verbose: true
         });
         it('Should match provided log result and exit 1', function () {
@@ -74,7 +72,7 @@ Max complexity:         16`);
             cqcResult.report();
 
             this.sinon.assert.calledWithMatch(console.log, /^Number of files: 6[\s\S]*45-95: complexity 13$/);
-            this.sinon.assert.calledWithMatch(console.error, 'Oops, high complexity rate is MORE than threshold 30%, please check the details.');
+            this.sinon.assert.calledWithMatch(console.error, 'Oops, high complexity rate is MORE than threshold 15%, please check the details.');
             this.sinon.assert.calledWith(process.exit, 1);
         });
     });

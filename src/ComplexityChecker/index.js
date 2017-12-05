@@ -18,27 +18,34 @@ class ComplexityChecker extends BaseChecker {
     check(...args) {
         super.check(...args);
 
-        let count = 0;
+        let numberOfFunctions = 0;
+        let numberOfHighComplexityFunctions = 0;
         let max = 0;
 
         const details = this.fileList.map((filepath) => {
             return this.getEslintResultFromFilepath(filepath);
         }).filter((eslintResult) => {
+            numberOfFunctions += eslintResult.numberOfFunctions;
+            numberOfHighComplexityFunctions += eslintResult.numberOfHighComplexityFunctions;
             max = Math.max(max, eslintResult.complexity);
             if (eslintResult.complexity > this.options.complexityMax) {
-                count += 1;
                 return true;
             }
             return false;
         });
 
-        const percentage = this.getPercentage(count);
+        let percentage = 0;
+        if (numberOfFunctions > 0) {
+            percentage = numberOfHighComplexityFunctions / numberOfFunctions * 100;
+        }
+        percentage = percentage.toFixed(2);
+
         const result = {
             complexity: {
                 percentage,
-                count,
-                max,
-                details
+                details,
+                numberOfFunctions,
+                numberOfHighComplexityFunctions
             }
         };
 
@@ -64,7 +71,9 @@ class ComplexityChecker extends BaseChecker {
             return {
                 filepath: resolvedFilepath,
                 complexity: 0,
-                details: []
+                details: [],
+                numberOfFunctions: 0,
+                numberOfHighComplexityFunctions: 0
             };
         }
 
@@ -90,7 +99,9 @@ class ComplexityChecker extends BaseChecker {
         return {
             filepath: resolvedFilepath,
             complexity: maxComplexity,
-            details: eslintResultWithComplexity
+            details: eslintResultWithComplexity,
+            numberOfFunctions: eslintResult.length,
+            numberOfHighComplexityFunctions: eslintResultWithComplexity.length
         };
     }
     getComplexityFromMessage(message) {
@@ -99,14 +110,6 @@ class ComplexityChecker extends BaseChecker {
             return Number(regExpResult[1]);
         }
         return 0;
-    }
-    getPercentage(count) {
-        let result = 0;
-        if (this.fileList.length > 0) {
-            result = count / this.fileList.length * 100;
-        }
-        result = result.toFixed(2);
-        return result;
     }
 }
 

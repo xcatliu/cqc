@@ -126,9 +126,9 @@ function jscpdAssertion(cqcResult) {
 
 function complexityAssertion(cqcResult) {
     it('should have correct complexity check result', () => {
-        assert.equal(cqcResult.complexity.percentage, '33.33');
-        assert.equal(cqcResult.complexity.count, 2);
-        assert.equal(cqcResult.complexity.max, 16);
+        assert.equal(cqcResult.complexity.percentage, '17.65');
+        assert.equal(cqcResult.complexity.numberOfFunctions, 17);
+        assert.equal(cqcResult.complexity.numberOfHighComplexityFunctions, 3);
         assert.lengthOf(cqcResult.complexity.details, 2);
         assert.equal(cqcResult.complexity.details[0].complexity, 16);
         assert.equal(cqcResult.complexity.details[1].complexity, 13);

@@ -23,7 +23,6 @@ describe('Report without options', () => {
         this.sinon.assert.calledWith(console.log, `Number of files:        6
 Source lines of code:   266
 Duplicate rate:         21.21%
-High complexity rate:   33.33%
-Max complexity:         16`);
+High complexity rate:   17.65%`);
     });
 });

@@ -26,11 +26,10 @@ cqc src
 Output:
 
 ```
-Number of files:        10
-Source lines of code:   647
-Duplicate rate:         3.46%
+Number of files:        12
+Source lines of code:   696
+Duplicate rate:         3.23%
 High complexity rate:   0.00%
-Max complexity:         10
 ```
 
 ## Usage
@@ -120,17 +119,16 @@ Output:
 ```json
 {
     "base": {
-        "numberOfFiles": 10
+        "numberOfFiles": 12
     },
     "sloc": {
-        "source": 647
+        "source": 696
     },
     "jscpd": {
-        "percentage": "3.46"
+        "percentage": "3.23"
     },
     "complexity": {
-        "percentage": "0.00",
-        "max": 10
+        "percentage": "0.00"
     }
 }
 ```
@@ -144,57 +142,58 @@ cqc src/**/*.js --verbose
 Output:
 
 ```
-Number of files: 10
+Number of files: 12
 File list:
     - E:\github\xcatliu\cqc\src\BaseChecker\index.js
     - E:\github\xcatliu\cqc\src\CheckerResult\cqcReporter.js
     - E:\github\xcatliu\cqc\src\CheckerResult\index.js
+    - E:\github\xcatliu\cqc\src\CheckerResult\logStdout.js
     - E:\github\xcatliu\cqc\src\CodeQualityChecker\index.js
     - E:\github\xcatliu\cqc\src\ComplexityChecker\eslintConfig.js
+    - E:\github\xcatliu\cqc\src\ComplexityChecker\getParserFromFilepath.js
     - E:\github\xcatliu\cqc\src\ComplexityChecker\index.js
     - E:\github\xcatliu\cqc\src\JscpdChecker\getLanguageFromFilepath.js
     - E:\github\xcatliu\cqc\src\JscpdChecker\index.js
     - E:\github\xcatliu\cqc\src\JscpdChecker\jscpdReporter.js
     - E:\github\xcatliu\cqc\src\SlocChecker\index.js
 
-Physical lines:             800
-Source lines of code:       647
+Physical lines:             854
+Source lines of code:       696
 Comments:                   36
 Single-line comments:       36
 Block comments:             0
 Mixed source and comments:  0
-Empty lines:                117
+Empty lines:                122
 TODO's:                     1
 
-Duplicate rate:             3.46%
+Duplicate rate:             3.23%
 Files of duplicated code:   3
 Count of duplicated code:   2
 Lines of duplicated code:   28
 Duplication details:
-    - E:\github\xcatliu\cqc\src\CheckerResult\cqcReporter.js: 150-154
-      E:\github\xcatliu\cqc\src\CheckerResult\cqcReporter.js: 156-160
-    - E:\github\xcatliu\cqc\src\JscpdChecker\index.js: 41-63
+    - E:\github\xcatliu\cqc\src\CheckerResult\logStdout.js: 67-71
+      E:\github\xcatliu\cqc\src\CheckerResult\logStdout.js: 73-77
+    - E:\github\xcatliu\cqc\src\JscpdChecker\index.js: 42-64
       E:\github\xcatliu\cqc\src\JscpdChecker\jscpdReporter.js: 22-44
 
-High complexity rate:       0.00%
-High complexity count:      0
-Max complexity:             10
+High complexity rate:                0.00%
+Number of functions:                 58
+Number of high complexity functions: 0
 ```
 
 #### Set the jscpd threshold
 
 ```bash
-cqc src/**/*.js --threshold-jscpd 3
+cqc src --threshold-jscpd 3
 ```
 
 Output:
 
 ```
-Number of files:        10
-Source lines of code:   646
-Duplicate rate:         3.46%
+Number of files:        12
+Source lines of code:   696
+Duplicate rate:         3.23%
 High complexity rate:   0.00%
-Max complexity:         10
 
 Oops, duplicate rate is MORE than threshold 3%, please check the details by adding --verbose option.
 ```
@@ -209,8 +208,7 @@ const codeQualityChecker = new CodeQualityChecker();
 
 // This will return a checkerResult object which include the check result
 const cqcResult = codeQualityChecker.check([
-    'src/**/*.js',
-    'src/**/*.jsx'
+    'src'
 ], {
     ext: '.js',
     ignorePath: '.gitignore,.eslintignore',
@@ -250,5 +248,6 @@ Source lines of code        | The lines of code except commants and blank lines
 Lines of duplicated code    | Lines of code (more than 5 lines or more than 70 tokens) which is exactly the same between two files, or in different place of one file
 Duplicate rate              | Lines of duplicated code / Source lines of code
 Complexity                  | https://en.wikipedia.org/wiki/Cyclomatic_complexity
-High complexity rate        | The number of files which has complexity more than 10 / Number of files
-Max complexity              | The highest complexity of all input files
+Number of functions         | The number of functions
+Number of high complexity functions | The number of functions which has complexity more than 10
+High complexity rate        | Number of high complexity functions / Number of functions

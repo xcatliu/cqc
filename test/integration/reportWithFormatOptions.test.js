@@ -35,8 +35,7 @@ describe('Report with format options', () => {
         "percentage": "21.21"
     },
     "complexity": {
-        "percentage": "33.33",
-        "max": 16
+        "percentage": "17.65"
     }
 }`);
     });
