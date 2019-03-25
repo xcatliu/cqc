@@ -14,9 +14,10 @@ function cqcReporter(resultObject, options = {}) {
     const result = processResult(resultObject, options);
 
     if (format === 'json') {
-        // console.log('****************************');
-        // console.log(jsonPath);
-        fs.writeFile(jsonPath, JSON.stringify(result, null, 4));
+        fs.writeFile(jsonPath, JSON.stringify(result, null, 4), 'utf-8', (err) => {
+            if (err) throw err;
+            console.log('save file success');
+        });
         console.log(JSON.stringify(result, null, 4));
     } else {
         logStdout(result, options);
