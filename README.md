@@ -4,6 +4,11 @@
 
 Check your code quality by running one command.
 
+    publish npmjs
+    
+    npm publish --access=public
+    
+
 ## Supported Languages
 
 - js, jsx, vue
@@ -87,6 +92,7 @@ Reporter options |
 `--verbose` | | | Verbose mode. A lot more information output
 `--threshold-jscpd` | number | | Set the jscpd threshold, process will exit if duplicate rate is more than threshold
 `--threshold-complexity` | number | | Set the complexity threshold, process will exit if complexity rate is more than threshold
+`--json-path` | string | | output json file,unite ` -f json` format.
 
 Examples:
 

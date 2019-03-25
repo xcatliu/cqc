@@ -1,17 +1,22 @@
 const _ = require('lodash');
 const logStdout = require('./logStdout');
+const fs = require('fs');
 
 function cqcReporter(resultObject, options = {}) {
     const {
         format,
         thresholdJscpd,
-        thresholdComplexity
+        thresholdComplexity,
+        jsonPath,
     } = options;
 
     // Add threshold to JSON, add filter details if necessary
     const result = processResult(resultObject, options);
 
     if (format === 'json') {
+        // console.log('****************************');
+        // console.log(jsonPath);
+        fs.writeFile(jsonPath, JSON.stringify(result, null, 4));
         console.log(JSON.stringify(result, null, 4));
     } else {
         logStdout(result, options);
