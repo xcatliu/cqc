@@ -27,6 +27,8 @@ program
     .option('--verbose', 'Verbose mode. A lot more information output')
     .option('--threshold-jscpd <number>', 'Set the jscpd threshold')
     .option('--threshold-complexity <number>', 'Set the complexity threshold')
+    // Output file path
+    .option('--json-path  <string>', 'output json file')
     .parse(process.argv);
 
 const patterns = program.args;
@@ -48,7 +50,8 @@ const checkOptions = _.pick(program, [
     'format',
     'verbose',
     'thresholdJscpd',
-    'thresholdComplexity'
+    'thresholdComplexity',
+    'jsonPath'
 ]);
 
 const codeQualityChecker = new CodeQualityChecker();
